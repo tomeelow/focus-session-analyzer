@@ -4,7 +4,7 @@ export const StorageService = {
   getSessions: () => {
     const data = localStorage.getItem(STORAGE_KEY);
     let sessions = data ? JSON.parse(data) : [];
-    
+
     // Migration: Ensure all sessions have new fields
     return sessions.map(session => ({
       ...session,
@@ -31,5 +31,29 @@ export const StorageService = {
 
   clearSessions: () => {
     localStorage.removeItem(STORAGE_KEY);
+  },
+
+  // Templates
+  getTemplates: () => {
+    const data = localStorage.getItem('focus_templates');
+    return data ? JSON.parse(data) : [];
+  },
+
+  saveTemplate: (template) => {
+    const templates = StorageService.getTemplates();
+    const existingIndex = templates.findIndex(t => t.id === template.id);
+
+    if (existingIndex >= 0) {
+      templates[existingIndex] = template;
+    } else {
+      templates.push({ ...template, id: Date.now().toString() });
+    }
+
+    localStorage.setItem('focus_templates', JSON.stringify(templates));
+  },
+
+  deleteTemplate: (id) => {
+    const templates = StorageService.getTemplates().filter(t => t.id !== id);
+    localStorage.setItem('focus_templates', JSON.stringify(templates));
   }
 };

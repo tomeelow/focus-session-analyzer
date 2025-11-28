@@ -1,5 +1,5 @@
 - [x] **Documentation**
-    - [x] Update `README.md` with "Focus Session Analyzer" branding and new features
+    - [x] Update `README.md` with Analytics, Dashboard, Templates, and Achievements
 - [ ] **Deployment**
     - [ ] Stage all changes
     - [ ] Commit changes with a descriptive message
