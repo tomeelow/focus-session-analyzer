@@ -1,0 +1,6 @@
+- [x] **Documentation**
+    - [x] Update `README.md` with "Focus Session Analyzer" branding and new features
+- [ ] **Deployment**
+    - [ ] Stage all changes
+    - [ ] Commit changes with a descriptive message
+    - [ ] Push changes to remote repository

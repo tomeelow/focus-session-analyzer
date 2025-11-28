@@ -1,8 +1,12 @@
+import { useState } from 'react';
 import { Card } from './Card';
 import { formatDuration, formatTime } from '../utils/format';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Filter } from 'lucide-react';
 
 export function History({ sessions, onSelectSession }) {
+  const [typeFilter, setTypeFilter] = useState('All');
+  const [tagFilter, setTagFilter] = useState('');
+
   if (sessions.length === 0) {
     return (
       <div className="text-center py-12 text-gray-500 border-2 border-dashed border-gray-100 rounded-xl">
@@ -14,28 +18,64 @@ export function History({ sessions, onSelectSession }) {
   // Sort by date desc
   const sortedSessions = [...sessions].sort((a, b) => b.startTime - a.startTime);
 
+  // Filter
+  const filteredSessions = sortedSessions.filter(session => {
+    const matchesType = typeFilter === 'All' || session.sessionType === typeFilter;
+    const matchesTag = tagFilter === '' || (session.tags && session.tags.some(t => t.toLowerCase().includes(tagFilter.toLowerCase())));
+    return matchesType && matchesTag;
+  });
+
+  const sessionTypes = ['All', ...new Set(sessions.map(s => s.sessionType || 'Study'))];
+
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold">Recent Sessions</h3>
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold">Recent Sessions</h3>
+        <div className="flex gap-2">
+          <select
+            className="text-sm border-gray-200 rounded-md py-1 pl-2 pr-8"
+            value={typeFilter}
+            onChange={(e) => setTypeFilter(e.target.value)}
+          >
+            {sessionTypes.map(t => <option key={t} value={t}>{t}</option>)}
+          </select>
+          <input
+            type="text"
+            placeholder="Filter tags..."
+            className="text-sm border border-gray-200 rounded-md px-2 py-1 w-32"
+            value={tagFilter}
+            onChange={(e) => setTagFilter(e.target.value)}
+          />
+        </div>
+      </div>
+
       <div className="space-y-2">
-        {sortedSessions.map((session, i) => (
-          <Card 
-            key={i} 
+        {filteredSessions.map((session, i) => (
+          <Card
+            key={i}
             className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors cursor-pointer group"
             onClick={() => onSelectSession(session)}
           >
-            <div className="flex flex-col">
-              <span className="font-medium text-gray-900">
-                {new Date(session.startTime).toLocaleDateString()}
-              </span>
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-2">
+                <span className="font-medium text-gray-900">
+                  {new Date(session.startTime).toLocaleDateString()}
+                </span>
+                <span className="text-xs px-2 py-0.5 bg-gray-100 rounded-full text-gray-600">
+                  {session.sessionType || 'Study'}
+                </span>
+              </div>
               <span className="text-sm text-gray-500">
                 {formatTime(session.startTime)} - {formatTime(session.endTime)}
+                {session.activityLabel && " • " + session.activityLabel}
               </span>
             </div>
             <div className="flex items-center gap-6">
               <div className="text-right">
                 <div className="font-medium">{formatDuration(session.totalDuration)}</div>
-                <div className="text-xs text-gray-500">{session.distractions.length} distractions</div>
+                <div className="text-xs text-gray-500">
+                  {session.events ? session.events.length : (session.distractions ? session.distractions.length : 0)} events
+                </div>
               </div>
               <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-gray-500 transition-colors" />
             </div>
