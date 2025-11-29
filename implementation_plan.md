@@ -1,61 +1,65 @@
-# Profile Settings Integration Plan
+# Mindtrack Rename & Calendar Feature Implementation Plan
 
 ## Goal Description
-Extend the User Profile to include "Focus preferences" (default session duration, day start hour) and integrate these settings into the Session Setup and Analytics features.
+Rename the application from "Focus Session Analyzer" to "Mindtrack" and introduce a new "Calendar Overview" page. This page will provide a monthly view of focus time, respecting the user's "Day Starts At" preference.
 
 ## User Review Required
 > [!NOTE]
-> Analytics calculations will change to respect the "Day starts at" setting. This means "Today" might cover a different time range than the calendar day.
+> The app name change will be reflected in the browser title, header, and welcome message.
 
 ## Proposed Changes
 
-### Services
-#### [MODIFY] [profile.js](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/services/profile.js)
-- Ensure `getProfile` returns defaults for new fields if they don't exist.
-- Defaults: `defaultSessionDurationMinutes: null`, `dayStartHour: 0`.
-
-### Utils
-#### [MODIFY] [analytics.js](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/utils/analytics.js)
-- Add `getUserDayStart(date, dayStartHour)` helper.
-- Update `calculateDailyStats`, `calculateWeeklyStats`, `calculateStreaks`, `getHeatmapData` to accept `dayStartHour` as an argument.
-- Replace hardcoded `setHours(0,0,0,0)` logic with `getUserDayStart`.
-
-### Components
-#### [MODIFY] [Profile.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/Profile.jsx)
-- Add "Focus Preferences" section.
-- Add Select/Input for `defaultSessionDurationMinutes`.
-- Add Select for `dayStartHour` (0-23).
-- Save these new fields to `ProfileService`.
-
-#### [MODIFY] [SessionSetup.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/SessionSetup.jsx)
-- Fetch profile on mount.
-- If `preferredSessionType` exists, set it as default `sessionType`.
-- If `defaultSessionDurationMinutes` exists, display a hint (e.g., "Default target: X min").
-
-#### [MODIFY] [Dashboard.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/Dashboard.jsx)
-- Accept `userProfile` prop.
-- Pass `userProfile.dayStartHour` to `AnalyticsService` methods.
+### Renaming
+#### [MODIFY] [index.html](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/index.html)
+- Change `<title>` to "Mindtrack".
 
 #### [MODIFY] [App.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/App.jsx)
-- Pass `userProfile` to `Dashboard` component.
-- Update Header Title to be a button/link that sets view to 'home'.
+- Update Header title to "Mindtrack".
+- Update Welcome message to "Mindtrack".
+- Update "F" logo to "M" (optional but nice).
+
+### Calendar Feature
+#### [NEW] [Calendar.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/Calendar.jsx)
+- **State**: `currentDate` (Date object, defaults to now), `selectedDay` (Date object or null).
+- **Props**: `sessions`, `dayStartHour`.
+- **Logic**:
+    - `daysInMonth`: Calculate days for the current month view.
+    - `getUserDayId(date, dayStartHour)`: Reuse or import from `AnalyticsService` (might need to export it if not already).
+    - Group sessions by `userDayId`.
+    - Calculate total duration per day.
+    - Determine intensity level (0, 0-30, 31-90, >90).
+- **UI**:
+    - Header: Month/Year label, Prev/Next buttons.
+    - Grid: 7 columns (Mon-Sun).
+    - Cells: Day number, intensity background.
+    - Legend: Explain intensity colors.
+    - Detail View (Modal/Panel): Show sessions for selected day.
+
+#### [MODIFY] [App.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/App.jsx)
+- Import `Calendar` component.
+- Add `calendar` to `view` state options.
+- Add "Calendar" button to `Nav` component.
+- Render `Calendar` component when `view === 'calendar'`.
+
+#### [MODIFY] [AnalyticsService](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/utils/analytics.js)
+- Ensure `getUserDayStart` is exported and usable by Calendar (it is).
 
 ## Verification Plan
 
 ### Manual Verification
-1.  **Profile**:
-    -   Go to Profile.
-    -   Set "Day starts at" to 4 (04:00).
-    -   Set "Default session duration" to 50.
-    -   Set "Preferred session type" to "Work".
-    -   Save.
-2.  **Session Setup**:
-    -   Go to Home -> Start Session.
-    -   Verify "Work" is selected by default.
-    -   Verify "Default target: 50 min" hint is visible.
-3.  **Analytics**:
-    -   Create a session that ends at 02:00 AM.
-    -   With "Day starts at 04:00", this session should count towards the *previous* calendar day.
-    -   Check Dashboard "Today" stats.
-4.  **Navigation**:
-    -   Click App Title in header. Verify it goes to Home.
+1.  **Renaming**:
+    -   Check browser tab title.
+    -   Check Header title.
+    -   Check Welcome message.
+2.  **Calendar Navigation**:
+    -   Click "Calendar" in nav. Verify Calendar page loads.
+3.  **Calendar Logic**:
+    -   Check current month is displayed.
+    -   Navigate to previous/next months.
+    -   Verify "today" has correct focus time (compare with Dashboard).
+    -   Verify intensity colors match duration.
+4.  **Day Start Hour**:
+    -   Change "Day Starts At" in Profile.
+    -   Verify Calendar updates (sessions before start hour move to previous day).
+5.  **Detail View**:
+    -   Click a day. Verify session list is correct.

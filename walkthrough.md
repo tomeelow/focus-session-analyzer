@@ -1,35 +1,38 @@
-# Profile Settings Integration Walkthrough
+# Mindtrack Rename & Calendar Walkthrough
 
-I have successfully wired the User Profile settings into the app, allowing users to customize their focus experience.
+I have successfully renamed the application to "Mindtrack" and added a new Calendar Overview page.
 
 ## Changes
 
-### Profile Page
-- Added a "Focus Preferences" section.
-- Users can now set:
-    - **Default Session Duration**: Pre-fills the target duration for new sessions.
-    - **Day Starts At**: Defines when the "logical day" begins (e.g., 04:00 AM), affecting daily stats and streaks.
+### App Rename
+- **App Title**: Changed to "Mindtrack" in the browser tab and app header.
+- **Welcome Message**: Updated to "Mindtrack" on the home page.
+- **Logo**: Updated the "F" logo to "M" in the header.
 
-### Session Setup
-- New sessions now respect the user's **Preferred Session Type** and **Default Session Duration**.
-- A hint is displayed if a default duration is set.
-
-### Analytics
-- Updated all analytics calculations (Daily Stats, Weekly Stats, Streaks, Heatmap) to use the **Day Starts At** setting.
-- Sessions recorded before the start hour now count towards the previous calendar day.
-
-### Navigation
-- The app header title "Focus Session Analyzer" is now clickable and navigates to the Home screen.
+### Calendar Feature
+- **New Route**: Added `/calendar` route and navigation item.
+- **Month View**: Displays a grid of days for the current month.
+- **Focus Intensity**: Days are color-coded based on total focus duration:
+    - 0 min: Light gray
+    - 1-30 min: Light green
+    - 31-90 min: Medium green
+    - >90 min: Dark green
+- **Day Details**: Clicking a day opens a modal showing:
+    - Total focus time for that day.
+    - List of sessions with type, duration, and status.
+- **Navigation**: Users can switch between months using previous/next buttons.
+- **Profile Integration**: Respects the user's "Day Starts At" preference for grouping sessions.
 
 ## Verification Results
 
 ### Automated Browser Verification
-I ran a browser verification session to ensure the settings are applied correctly.
+I ran a browser verification session to ensure the rename and calendar functionality work as expected.
 
 **Steps Performed:**
-1.  Set preferences in Profile: Work, 50 min, 04:00 start.
-2.  Navigated to Home -> Start Session.
-3.  Verified "Work" was selected and "Default target: 50 min" was displayed.
+1.  Verified "Mindtrack" title and header.
+2.  Navigated to the Calendar page.
+3.  Verified month rendering and navigation.
+4.  Opened day detail modal for the current day.
 
 **Proof of Success:**
-![Session Setup with Defaults](/Users/ivantomilo/.gemini/antigravity/brain/8d506345-5bf3-4f83-807f-8942df71a307/session_setup_defaults_1764459963584.png)
+![Calendar Page](/Users/ivantomilo/.gemini/antigravity/brain/8d506345-5bf3-4f83-807f-8942df71a307/calendar_page_1764460689518.png)

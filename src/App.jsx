@@ -12,9 +12,10 @@ import { Stats } from './components/Stats';
 import { Dashboard } from './components/Dashboard';
 import { AchievementsList } from './components/AchievementsList';
 import { Profile } from './components/Profile';
+import { Calendar } from './components/Calendar';
 import { ProfileService } from './services/profile';
 import { Button } from './components/Button';
-import { Play, LayoutDashboard, History as HistoryIcon, Trophy, Download, User } from 'lucide-react';
+import { Play, LayoutDashboard, History as HistoryIcon, Trophy, Download, User, Calendar as CalendarIcon } from 'lucide-react';
 
 function App() {
   const [view, setView] = useState('home'); // home, setup, running, end, summary, detail, dashboard, achievements
@@ -120,6 +121,16 @@ function App() {
         </div>
       </button>
       <button
+        onClick={() => setView('calendar')}
+        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${view === 'calendar' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+          }`}
+      >
+        <div className="flex items-center gap-2">
+          <CalendarIcon className="w-4 h-4" />
+          <span className="hidden sm:inline">Calendar</span>
+        </div>
+      </button>
+      <button
         onClick={() => setView('history')}
         className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${view === 'history' || view === 'detail' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
           }`}
@@ -154,8 +165,8 @@ function App() {
             className="text-xl font-bold tracking-tight flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
             onClick={() => setView('home')}
           >
-            <span className="w-8 h-8 bg-gray-900 text-white rounded-lg flex items-center justify-center text-lg">F</span>
-            Focus Session Analyzer
+            <span className="w-8 h-8 bg-gray-900 text-white rounded-lg flex items-center justify-center text-lg">M</span>
+            Mindtrack
           </h1>
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="sm" onClick={handleExport} className="text-gray-500 hover:text-gray-900">
@@ -183,7 +194,7 @@ function App() {
             <div className="space-y-12 animate-in fade-in duration-500">
               <div className="text-center space-y-6 py-8">
                 <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl">
-                  Focus on what matters.
+                  Mindtrack
                 </h2>
                 <p className="text-lg text-gray-500 max-w-lg mx-auto">
                   Track your focus sessions, log distractions, and analyze your productivity patterns.
@@ -202,6 +213,10 @@ function App() {
 
           {view === 'dashboard' && (
             <Dashboard sessions={sessions} achievements={achievements} userProfile={userProfile} />
+          )}
+
+          {view === 'calendar' && (
+            <Calendar sessions={sessions} dayStartHour={userProfile?.dayStartHour || 0} />
           )}
 
           {view === 'history' && (
