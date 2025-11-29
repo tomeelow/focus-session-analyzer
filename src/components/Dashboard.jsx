@@ -4,16 +4,17 @@ import { AnalyticsService } from '../utils/analytics';
 import { formatDuration } from '../utils/format';
 import { Flame, Trophy, AlertCircle, Calendar } from 'lucide-react';
 
-export function Dashboard({ sessions, achievements }) {
+export function Dashboard({ sessions, achievements, userProfile }) {
     const stats = useMemo(() => {
+        const dayStartHour = userProfile?.dayStartHour || 0;
         return {
-            daily: AnalyticsService.calculateDailyStats(sessions),
-            weekly: AnalyticsService.calculateWeeklyStats(sessions),
-            streaks: AnalyticsService.calculateStreaks(sessions),
+            daily: AnalyticsService.calculateDailyStats(sessions, dayStartHour),
+            weekly: AnalyticsService.calculateWeeklyStats(sessions, dayStartHour),
+            streaks: AnalyticsService.calculateStreaks(sessions, dayStartHour),
             distractions: AnalyticsService.calculateDistractionInsights(sessions),
-            heatmap: AnalyticsService.getHeatmapData(sessions)
+            heatmap: AnalyticsService.getHeatmapData(sessions, dayStartHour)
         };
-    }, [sessions]);
+    }, [sessions, userProfile]);
 
     const recentAchievements = achievements.filter(a => a.unlocked).sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 3);
 
@@ -72,9 +73,9 @@ export function Dashboard({ sessions, achievements }) {
                                     key={day.date}
                                     title={`${day.date}: ${formatDuration(day.duration)}`}
                                     className={`w-3 h-3 sm:w-4 sm:h-4 rounded-sm ${day.level === 0 ? 'bg-gray-100' :
-                                            day.level === 1 ? 'bg-green-200' :
-                                                day.level === 2 ? 'bg-green-400' :
-                                                    'bg-green-600'
+                                        day.level === 1 ? 'bg-green-200' :
+                                            day.level === 2 ? 'bg-green-400' :
+                                                'bg-green-600'
                                         }`}
                                 />
                             ))}

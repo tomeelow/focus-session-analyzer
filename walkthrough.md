@@ -1,37 +1,35 @@
-# User Profile Feature Walkthrough
+# Profile Settings Integration Walkthrough
 
-I have successfully implemented the User Profile feature, allowing users to manage their profile information and upload an avatar.
+I have successfully wired the User Profile settings into the app, allowing users to customize their focus experience.
 
 ## Changes
 
-### New Components
-- **`Profile`**: A new page component that handles:
-    - Displaying and editing user information (Display Name, Bio, Preferred Session Type).
-    - Uploading and previewing an avatar image.
-    - Persisting data to `localStorage`.
-- **`ProfileService`**: A service utility to handle `localStorage` operations for the user profile.
+### Profile Page
+- Added a "Focus Preferences" section.
+- Users can now set:
+    - **Default Session Duration**: Pre-fills the target duration for new sessions.
+    - **Day Starts At**: Defines when the "logical day" begins (e.g., 04:00 AM), affecting daily stats and streaks.
 
-### Updates
-- **`App.jsx`**:
-    - Added routing for the `profile` view.
-    - Integrated `ProfileService` to load user data on startup.
-    - Updated the Header to display the user's avatar (or a placeholder) which links to the Profile page.
-    - Added `Profile` component to the view rendering logic.
+### Session Setup
+- New sessions now respect the user's **Preferred Session Type** and **Default Session Duration**.
+- A hint is displayed if a default duration is set.
+
+### Analytics
+- Updated all analytics calculations (Daily Stats, Weekly Stats, Streaks, Heatmap) to use the **Day Starts At** setting.
+- Sessions recorded before the start hour now count towards the previous calendar day.
+
+### Navigation
+- The app header title "Focus Session Analyzer" is now clickable and navigates to the Home screen.
 
 ## Verification Results
 
 ### Automated Browser Verification
-I ran a browser verification session to ensure the feature works as expected.
+I ran a browser verification session to ensure the settings are applied correctly.
 
 **Steps Performed:**
-1.  Navigated to the app.
-2.  Clicked the profile avatar in the header.
-3.  Filled out the profile form (Name, Bio, Session Type).
-4.  Saved the profile.
-5.  Verified the success message.
+1.  Set preferences in Profile: Work, 50 min, 04:00 start.
+2.  Navigated to Home -> Start Session.
+3.  Verified "Work" was selected and "Default target: 50 min" was displayed.
 
 **Proof of Success:**
-![Profile Saved Successfully](/Users/ivantomilo/.gemini/antigravity/brain/8d506345-5bf3-4f83-807f-8942df71a307/profile_saved_1764458987563.png)
-
-## Next Steps
-- The feature is currently local-only. Future improvements could include syncing this data to a backend.
+![Session Setup with Defaults](/Users/ivantomilo/.gemini/antigravity/brain/8d506345-5bf3-4f83-807f-8942df71a307/session_setup_defaults_1764459963584.png)

@@ -150,7 +150,10 @@ function App() {
     <div className="min-h-screen bg-white text-gray-900 font-sans selection:bg-gray-200">
       <div className="max-w-4xl mx-auto px-4 py-8 md:py-12 space-y-8">
         <header className="flex items-center justify-between pb-6 border-b border-gray-100">
-          <h1 className="text-xl font-bold tracking-tight flex items-center gap-2">
+          <h1
+            className="text-xl font-bold tracking-tight flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={() => setView('home')}
+          >
             <span className="w-8 h-8 bg-gray-900 text-white rounded-lg flex items-center justify-center text-lg">F</span>
             Focus Session Analyzer
           </h1>
@@ -198,7 +201,7 @@ function App() {
           )}
 
           {view === 'dashboard' && (
-            <Dashboard sessions={sessions} achievements={achievements} />
+            <Dashboard sessions={sessions} achievements={achievements} userProfile={userProfile} />
           )}
 
           {view === 'history' && (

@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from './Button';
 import { Card } from './Card';
 import { TemplateList } from './TemplateList';
-import { LayoutTemplate } from 'lucide-react';
+import { ProfileService } from '../services/profile';
+import { LayoutTemplate, Clock } from 'lucide-react';
 
 const SESSION_TYPES = ['Study', 'Work', 'Creative', 'Planning', 'Chores', 'Other'];
 
@@ -11,12 +12,28 @@ export function SessionSetup({ onStart }) {
     const [activityLabel, setActivityLabel] = useState('');
     const [goal, setGoal] = useState('');
     const [showTemplates, setShowTemplates] = useState(false);
+    const [defaultDuration, setDefaultDuration] = useState(null);
+
+    useEffect(() => {
+        const profile = ProfileService.getProfile();
+        if (profile) {
+            if (profile.preferredSessionType) {
+                setSessionType(profile.preferredSessionType);
+            }
+            if (profile.defaultSessionDurationMinutes) {
+                setDefaultDuration(profile.defaultSessionDurationMinutes);
+            }
+        }
+    }, []);
 
     const handleStart = () => {
         onStart({
             sessionType,
             activityLabel,
-            goal
+            goal,
+            // Pass the default duration if set, otherwise let the active session handle it (or pass null)
+            // The requirement says "target duration", but ActiveSession might not support it yet.
+            // For now, we just display the hint as requested.
         });
     };
 
@@ -68,6 +85,12 @@ export function SessionSetup({ onStart }) {
                                 </button>
                             ))}
                         </div>
+                        {defaultDuration && (
+                            <div className="flex items-center gap-2 text-sm text-gray-500 mt-2">
+                                <Clock className="w-3 h-3" />
+                                <span>Default target: {defaultDuration} min</span>
+                            </div>
+                        )}
                     </div>
 
                     <div className="space-y-3">
