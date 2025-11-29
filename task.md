@@ -1,6 +1,21 @@
-- [x] **Documentation**
-    - [x] Update `README.md` with Analytics, Dashboard, Templates, and Achievements
-- [ ] **Deployment**
-    - [ ] Stage all changes
-    - [ ] Commit changes with a descriptive message
-    - [ ] Push changes to remote repository
+# Task: Add User Profile Page with Avatar Upload
+
+- [x] Create feature branch `feature/user-profile` <!-- id: 0 -->
+- [x] Planning <!-- id: 1 -->
+    - [x] Explore codebase (App.jsx, components) <!-- id: 2 -->
+    - [x] Create implementation plan <!-- id: 3 -->
+- [x] Implementation <!-- id: 4 -->
+    - [x] Create `ProfileService` for localStorage handling <!-- id: 5 -->
+    - [x] Create `Profile` component <!-- id: 6 -->
+        - [x] Layout (Avatar, Name, Bio, Session Type) <!-- id: 7 -->
+        - [x] Avatar upload logic <!-- id: 8 -->
+        - [x] Save/Load logic <!-- id: 9 -->
+    - [x] Add Route in `App.jsx` <!-- id: 10 -->
+    - [x] Update Navigation (Header/Sidebar) <!-- id: 11 -->
+        - [x] Add Profile link <!-- id: 12 -->
+        - [x] Display Avatar in Header (Nice-to-have) <!-- id: 13 -->
+- [x] Verification <!-- id: 14 -->
+    - [x] Verify Profile page rendering <!-- id: 15 -->
+    - [x] Verify Avatar upload and persistence <!-- id: 16 -->
+    - [x] Verify Data saving and loading <!-- id: 17 -->
+    - [x] Verify Navigation <!-- id: 18 -->
