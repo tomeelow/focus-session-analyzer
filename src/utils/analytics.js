@@ -1,11 +1,25 @@
 import { formatDuration } from './format';
 
 export const AnalyticsService = {
-    calculateDailyStats: (sessions) => {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+    getUserDayStart: (date, dayStartHour = 0) => {
+        const d = new Date(date);
+        // If the hour is before the start hour, it belongs to the previous "user day"
+        if (d.getHours() < dayStartHour) {
+            d.setDate(d.getDate() - 1);
+        }
+        d.setHours(dayStartHour, 0, 0, 0);
+        return d;
+    },
 
-        const todaySessions = sessions.filter(s => s.startTime >= today.getTime());
+    calculateDailyStats: (sessions, dayStartHour = 0) => {
+        const todayStart = AnalyticsService.getUserDayStart(new Date(), dayStartHour);
+        const nextDayStart = new Date(todayStart);
+        nextDayStart.setDate(nextDayStart.getDate() + 1);
+
+        const todaySessions = sessions.filter(s =>
+            s.startTime >= todayStart.getTime() && s.startTime < nextDayStart.getTime()
+        );
+
         const totalTime = todaySessions.reduce((acc, s) => acc + s.totalDuration, 0);
 
         const totalDistractions = todaySessions.reduce((acc, s) => {
@@ -22,12 +36,12 @@ export const AnalyticsService = {
         };
     },
 
-    calculateWeeklyStats: (sessions) => {
-        const weekAgo = new Date();
-        weekAgo.setDate(weekAgo.getDate() - 7);
-        weekAgo.setHours(0, 0, 0, 0);
+    calculateWeeklyStats: (sessions, dayStartHour = 0) => {
+        const todayStart = AnalyticsService.getUserDayStart(new Date(), dayStartHour);
+        const weekAgoStart = new Date(todayStart);
+        weekAgoStart.setDate(weekAgoStart.getDate() - 7);
 
-        const weeklySessions = sessions.filter(s => s.startTime >= weekAgo.getTime());
+        const weeklySessions = sessions.filter(s => s.startTime >= weekAgoStart.getTime());
         const totalTime = weeklySessions.reduce((acc, s) => acc + s.totalDuration, 0);
 
         // Most common session type
@@ -44,13 +58,11 @@ export const AnalyticsService = {
         };
     },
 
-    calculateStreaks: (sessions) => {
+    calculateStreaks: (sessions, dayStartHour = 0) => {
         if (!sessions.length) return { current: 0, longest: 0 };
 
         const dates = [...new Set(sessions.map(s => {
-            const d = new Date(s.startTime);
-            d.setHours(0, 0, 0, 0);
-            return d.getTime();
+            return AnalyticsService.getUserDayStart(s.startTime, dayStartHour).getTime();
         }))].sort((a, b) => b - a); // Descending
 
         let current = 0;
@@ -58,14 +70,13 @@ export const AnalyticsService = {
         let tempLongest = 0;
 
         // Check if today or yesterday has a session for current streak
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const yesterday = new Date(today);
-        yesterday.setDate(yesterday.getDate() - 1);
+        const todayStart = AnalyticsService.getUserDayStart(new Date(), dayStartHour);
+        const yesterdayStart = new Date(todayStart);
+        yesterdayStart.setDate(yesterdayStart.getDate() - 1);
 
-        if (dates.includes(today.getTime())) {
+        if (dates.includes(todayStart.getTime())) {
             current = 1;
-        } else if (dates.includes(yesterday.getTime())) {
+        } else if (dates.includes(yesterdayStart.getTime())) {
             // Streak is still active if last session was yesterday
         } else {
             // Streak broken
@@ -73,9 +84,9 @@ export const AnalyticsService = {
         }
 
         // Calculate current streak strictly
-        let checkDate = new Date(today);
+        let checkDate = new Date(todayStart);
         // If no session today, start checking from yesterday
-        if (!dates.includes(today.getTime())) {
+        if (!dates.includes(todayStart.getTime())) {
             checkDate.setDate(checkDate.getDate() - 1);
         }
 
@@ -148,20 +159,19 @@ export const AnalyticsService = {
         };
     },
 
-    getHeatmapData: (sessions) => {
+    getHeatmapData: (sessions, dayStartHour = 0) => {
         const data = {};
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        const todayStart = AnalyticsService.getUserDayStart(new Date(), dayStartHour);
 
         // Last 30 days
         for (let i = 29; i >= 0; i--) {
-            const d = new Date(today);
+            const d = new Date(todayStart);
             d.setDate(d.getDate() - i);
             data[d.toISOString().split('T')[0]] = 0;
         }
 
         sessions.forEach(s => {
-            const dateKey = new Date(s.startTime).toISOString().split('T')[0];
+            const dateKey = AnalyticsService.getUserDayStart(s.startTime, dayStartHour).toISOString().split('T')[0];
             if (data[dateKey] !== undefined) {
                 data[dateKey] += s.totalDuration;
             }

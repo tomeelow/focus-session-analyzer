@@ -1,21 +1,17 @@
-# Task: Add User Profile Page with Avatar Upload
+# Task: Wire Profile Settings into App
 
-- [x] Create feature branch `feature/user-profile` <!-- id: 0 -->
+- [x] Create feature branch `feature/profile-settings` <!-- id: 0 -->
 - [x] Planning <!-- id: 1 -->
-    - [x] Explore codebase (App.jsx, components) <!-- id: 2 -->
-    - [x] Create implementation plan <!-- id: 3 -->
-- [x] Implementation <!-- id: 4 -->
-    - [x] Create `ProfileService` for localStorage handling <!-- id: 5 -->
-    - [x] Create `Profile` component <!-- id: 6 -->
-        - [x] Layout (Avatar, Name, Bio, Session Type) <!-- id: 7 -->
-        - [x] Avatar upload logic <!-- id: 8 -->
-        - [x] Save/Load logic <!-- id: 9 -->
-    - [x] Add Route in `App.jsx` <!-- id: 10 -->
-    - [x] Update Navigation (Header/Sidebar) <!-- id: 11 -->
-        - [x] Add Profile link <!-- id: 12 -->
-        - [x] Display Avatar in Header (Nice-to-have) <!-- id: 13 -->
-- [x] Verification <!-- id: 14 -->
-    - [x] Verify Profile page rendering <!-- id: 15 -->
-    - [x] Verify Avatar upload and persistence <!-- id: 16 -->
-    - [x] Verify Data saving and loading <!-- id: 17 -->
-    - [x] Verify Navigation <!-- id: 18 -->
+    - [x] Explore `SessionSetup.jsx` for pre-filling defaults <!-- id: 2 -->
+    - [x] Explore `AnalyticsService` and date logic for `dayStartHour` <!-- id: 3 -->
+    - [x] Create implementation plan <!-- id: 4 -->
+- [x] Implementation <!-- id: 5 -->
+    - [x] Update `Profile` component (UI for new settings) <!-- id: 6 -->
+    - [x] Update `SessionSetup` component (Use defaults) <!-- id: 7 -->
+    - [x] Update `AnalyticsService` (Implement `getUserDayId` and update logic) <!-- id: 8 -->
+    - [x] Update `App.jsx` (Header click to home) <!-- id: 9 -->
+- [x] Verification <!-- id: 10 -->
+    - [x] Verify Profile settings persistence <!-- id: 11 -->
+    - [x] Verify Session Setup defaults <!-- id: 12 -->
+    - [x] Verify "Today" and Streak calculations with custom start hour <!-- id: 13 -->
+    - [x] Verify Header navigation <!-- id: 14 -->

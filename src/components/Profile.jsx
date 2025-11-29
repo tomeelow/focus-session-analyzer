@@ -167,9 +167,60 @@ export function Profile(props) {
                                 <option value="Study">Study</option>
                                 <option value="Work">Work</option>
                                 <option value="Creative">Creative</option>
-                                <option value="Reading">Reading</option>
+                                <option value="Planning">Planning</option>
+                                <option value="Chores">Chores</option>
                                 <option value="Other">Other</option>
                             </select>
+                        </div>
+
+                        <div className="pt-6 border-t border-gray-100 space-y-6">
+                            <h3 className="font-medium text-gray-900">Focus Preferences</h3>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div className="space-y-2">
+                                    <label htmlFor="defaultSessionDurationMinutes" className="text-sm font-medium text-gray-700">
+                                        Default Session Duration (minutes)
+                                    </label>
+                                    <select
+                                        id="defaultSessionDurationMinutes"
+                                        name="defaultSessionDurationMinutes"
+                                        value={profile.defaultSessionDurationMinutes || ''}
+                                        onChange={handleChange}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all bg-white"
+                                    >
+                                        <option value="">No default</option>
+                                        <option value="15">15 minutes</option>
+                                        <option value="25">25 minutes</option>
+                                        <option value="30">30 minutes</option>
+                                        <option value="45">45 minutes</option>
+                                        <option value="50">50 minutes</option>
+                                        <option value="60">60 minutes</option>
+                                        <option value="90">90 minutes</option>
+                                    </select>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label htmlFor="dayStartHour" className="text-sm font-medium text-gray-700">
+                                        Day Starts At
+                                    </label>
+                                    <select
+                                        id="dayStartHour"
+                                        name="dayStartHour"
+                                        value={profile.dayStartHour !== undefined ? profile.dayStartHour : 0}
+                                        onChange={handleChange}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all bg-white"
+                                    >
+                                        {Array.from({ length: 24 }).map((_, i) => (
+                                            <option key={i} value={i}>
+                                                {i.toString().padStart(2, '0')}:00
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <p className="text-xs text-gray-500">
+                                        Sessions before this time count as the previous day.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

@@ -4,7 +4,14 @@ export const ProfileService = {
     getProfile: () => {
         try {
             const stored = localStorage.getItem(PROFILE_KEY);
-            return stored ? JSON.parse(stored) : null;
+            if (!stored) return null;
+
+            const profile = JSON.parse(stored);
+            return {
+                ...profile,
+                defaultSessionDurationMinutes: profile.defaultSessionDurationMinutes || null,
+                dayStartHour: profile.dayStartHour !== undefined ? profile.dayStartHour : 0
+            };
         } catch (error) {
             console.error('Failed to load profile:', error);
             return null;
