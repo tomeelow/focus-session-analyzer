@@ -25,6 +25,10 @@ A modern, minimalist web application to help you track your focus sessions, mana
 - **💾 Local Storage**: All data is persisted locally on your device. No account required.
 - **📤 Export Data**: Download your complete history, templates, and achievements as a JSON file for backup.
 
+### Personalization
+- **👤 User Profile**: Customize your experience with a display name, bio, and preferred session type.
+- **🖼️ Avatar**: Upload a personal avatar that persists locally and appears in the app header.
+
 ## Tech Stack
 
 - **Framework**: [React](https://react.dev/) + [Vite](https://vitejs.dev/)

@@ -11,8 +11,10 @@ import { SessionDetail } from './components/SessionDetail';
 import { Stats } from './components/Stats';
 import { Dashboard } from './components/Dashboard';
 import { AchievementsList } from './components/AchievementsList';
+import { Profile } from './components/Profile';
+import { ProfileService } from './services/profile';
 import { Button } from './components/Button';
-import { Play, LayoutDashboard, History as HistoryIcon, Trophy, Download } from 'lucide-react';
+import { Play, LayoutDashboard, History as HistoryIcon, Trophy, Download, User } from 'lucide-react';
 
 function App() {
   const [view, setView] = useState('home'); // home, setup, running, end, summary, detail, dashboard, achievements
@@ -21,10 +23,15 @@ function App() {
   const [currentSessionConfig, setCurrentSessionConfig] = useState(null);
   const [completedSession, setCompletedSession] = useState(null);
   const [selectedSession, setSelectedSession] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
 
   useEffect(() => {
     const loadedSessions = StorageService.getSessions();
     setSessions(loadedSessions);
+
+    // Load user profile
+    const profile = ProfileService.getProfile();
+    setUserProfile(profile);
 
     // Initial achievement check
     const streaks = AnalyticsService.calculateStreaks(loadedSessions);
@@ -135,6 +142,10 @@ function App() {
     </nav>
   );
 
+  const handleProfileUpdate = (updatedProfile) => {
+    setUserProfile(updatedProfile);
+  };
+
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans selection:bg-gray-200">
       <div className="max-w-4xl mx-auto px-4 py-8 md:py-12 space-y-8">
@@ -143,10 +154,23 @@ function App() {
             <span className="w-8 h-8 bg-gray-900 text-white rounded-lg flex items-center justify-center text-lg">F</span>
             Focus Session Analyzer
           </h1>
-          <Button variant="ghost" size="sm" onClick={handleExport} className="text-gray-500 hover:text-gray-900">
-            <Download className="w-4 h-4 mr-2" />
-            Export Data
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="sm" onClick={handleExport} className="text-gray-500 hover:text-gray-900">
+              <Download className="w-4 h-4 mr-2" />
+              Export Data
+            </Button>
+            <button
+              onClick={() => setView('profile')}
+              className="w-8 h-8 rounded-full overflow-hidden bg-gray-100 border border-gray-200 flex items-center justify-center hover:ring-2 hover:ring-gray-900 transition-all"
+              title="User Profile"
+            >
+              {userProfile?.avatarDataUrl ? (
+                <img src={userProfile.avatarDataUrl} alt="Profile" className="w-full h-full object-cover" />
+              ) : (
+                <User className="w-4 h-4 text-gray-400" />
+              )}
+            </button>
+          </div>
         </header>
 
         {view !== 'running' && view !== 'end' && view !== 'summary' && <Nav />}
@@ -203,6 +227,10 @@ function App() {
 
           {view === 'detail' && selectedSession && (
             <SessionDetail session={selectedSession} onClose={() => setView('history')} />
+          )}
+
+          {view === 'profile' && (
+            <Profile onProfileUpdate={handleProfileUpdate} />
           )}
         </main>
       </div>

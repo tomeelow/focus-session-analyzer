@@ -1,33 +1,37 @@
-# Focus Session Analyzer - Analytics & Dashboard Upgrade
+# User Profile Feature Walkthrough
 
-This walkthrough demonstrates the new Analytics, Dashboard, and Gamification features added to the Focus Session Analyzer.
+I have successfully implemented the User Profile feature, allowing users to manage their profile information and upload an avatar.
 
-## 1. Dashboard
-The new Dashboard provides a high-level overview of your productivity.
-- **Stats Cards**: View "Today's Focus", "7 Day Focus", "Current Streak", and "Achievements" at a glance.
-- **Activity Heatmap**: Visualize your focus intensity over the last 30 days.
-- **Distraction Insights**: See a breakdown of what distracts you the most.
+## Changes
 
-![Dashboard](/Users/ivantomilo/.gemini/antigravity/brain/982c73de-13f8-409d-a530-a7639e615e15/dashboard_page_1764370086957.png)
+### New Components
+- **`Profile`**: A new page component that handles:
+    - Displaying and editing user information (Display Name, Bio, Preferred Session Type).
+    - Uploading and previewing an avatar image.
+    - Persisting data to `localStorage`.
+- **`ProfileService`**: A service utility to handle `localStorage` operations for the user profile.
 
-## 2. Achievements (Trophies)
-Gamify your focus with achievements.
-- **Unlockable Milestones**: "First Step", "Hat Trick", "Century Club", and more.
-- **Progress Tracking**: See which achievements you've unlocked and when.
+### Updates
+- **`App.jsx`**:
+    - Added routing for the `profile` view.
+    - Integrated `ProfileService` to load user data on startup.
+    - Updated the Header to display the user's avatar (or a placeholder) which links to the Profile page.
+    - Added `Profile` component to the view rendering logic.
 
-![Achievements](/Users/ivantomilo/.gemini/antigravity/brain/982c73de-13f8-409d-a530-a7639e615e15/achievements_page_1764370099558.png)
+## Verification Results
 
-## 3. Session Templates
-Streamline your workflow with reusable templates.
-- **Create Templates**: Pre-configure Session Type, Activity Label, and Goals.
-- **Quick Start**: Start a session with one click using a saved template.
+### Automated Browser Verification
+I ran a browser verification session to ensure the feature works as expected.
 
-![Templates](/Users/ivantomilo/.gemini/antigravity/brain/982c73de-13f8-409d-a530-a7639e615e15/templates_page_1764370130208.png)
+**Steps Performed:**
+1.  Navigated to the app.
+2.  Clicked the profile avatar in the header.
+3.  Filled out the profile form (Name, Bio, Session Type).
+4.  Saved the profile.
+5.  Verified the success message.
 
-## 4. Export Data
-- **Backup**: Export all your sessions, templates, and achievements to a JSON file via the "Export Data" button in the header.
+**Proof of Success:**
+![Profile Saved Successfully](/Users/ivantomilo/.gemini/antigravity/brain/8d506345-5bf3-4f83-807f-8942df71a307/profile_saved_1764458987563.png)
 
-## Verification
-- **Build**: The application builds successfully for production (`npm run build`).
-- **Data Persistence**: All new data (templates, achievements) is stored in `localStorage`.
-- **Backward Compatibility**: Existing sessions are preserved and used for new analytics.
+## Next Steps
+- The feature is currently local-only. Future improvements could include syncing this data to a backend.

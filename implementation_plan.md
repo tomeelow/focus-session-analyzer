@@ -1,59 +1,59 @@
-# Implementation Plan - Analytics & Dashboard Upgrade
+# User Profile Feature Implementation Plan
 
 ## Goal Description
-Upgrade "Focus Session Analyzer" with a new Dashboard, Analytics, Streak tracking, Session Templates, and Achievements system to enhance user engagement and provide deeper insights.
+Add a User Profile page to the Focus Session Analyzer app. This page will allow users to set a display name, bio, preferred session type, and upload an avatar. The data will be persisted in `localStorage`. Additionally, the avatar will be displayed in the main header.
 
 ## User Review Required
 > [!NOTE]
-> No breaking changes expected. Data migration for achievements will be calculated on the fly or on first load.
+> No authentication is being implemented. All data is local to the browser.
 
 ## Proposed Changes
 
-### Data Layer
-#### [MODIFY] [storage.js](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/services/storage.js)
-- Add methods for Templates: `getTemplates`, `saveTemplate`, `deleteTemplate`.
-- Templates schema: `{ id, name, sessionType, activityLabel, goal }`.
-
-### Utilities
-#### [NEW] [analytics.js](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/utils/analytics.js)
-- `calculateDailyStats(sessions)`: Returns today's focus time, count, distractions.
-- `calculateWeeklyStats(sessions)`: Returns last 7 days stats.
-- `calculateStreaks(sessions)`: Returns current and longest streaks.
-- `calculateDistractionInsights(sessions)`: Aggregates distraction reasons.
-- `getHeatmapData(sessions)`: Returns daily intensity for the last 30 days.
-
-#### [NEW] [achievements.js](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/utils/achievements.js)
-- `evaluateAchievements(sessions)`: Returns list of achievements with status (locked/unlocked).
-- Definitions for: `firstSession`, `threeSessionsOneDay`, `hundredMinutesTotal`, `noDistractionLongSession`, `weekStreak7`.
+### Services
+#### [NEW] [ProfileService.js](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/services/profile.js)
+- Create a service to handle profile data persistence in `localStorage`.
+- Methods: `getProfile()`, `saveProfile(profileData)`, `clearAvatar()`.
+- Data structure: `{ displayName, bio, preferredSessionType, avatarDataUrl }`.
 
 ### Components
-
-#### [NEW] [Dashboard.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/Dashboard.jsx)
-- Main view component.
-- Displays "Today" and "This Week" cards.
-- Displays "Streaks" and Heatmap.
-- Displays "Distraction Insights".
-- Displays "Achievements" summary.
-
-#### [NEW] [TemplateList.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/TemplateList.jsx)
-- UI for listing, creating, and deleting templates.
-
-#### [MODIFY] [SessionSetup.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/SessionSetup.jsx)
-- Add "Choose Template" dropdown/button.
-- Logic to prefill form when template is selected.
+#### [NEW] [Profile.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/Profile.jsx)
+- Create the Profile page component.
+- State: `displayName`, `bio`, `preferredSessionType`, `avatarDataUrl`.
+- UI:
+    - Avatar preview (circle).
+    - File input for avatar upload.
+    - "Remove avatar" button.
+    - Text input for Display Name.
+    - Textarea for Bio.
+    - Select for Preferred Session Type.
+    - "Save profile" button.
+- Behavior:
+    - Load data on mount using `ProfileService`.
+    - Handle file selection and preview (FileReader).
+    - Handle save (persist to `ProfileService`).
 
 #### [MODIFY] [App.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/App.jsx)
-- Add navigation (Tabs or Sidebar) to switch between Home (Timer), Dashboard, History, Templates.
-- Integrate `Dashboard` and `TemplateList` views.
-- Add "Export Data" button in footer or settings area.
+- Add `profile` to `view` state.
+- Import `Profile` component.
+- Add `Profile` component to the conditional rendering logic.
+- Update `Nav` component to include a "Profile" link (or just rely on header avatar).
+- Update Header to display the user avatar (tiny circle).
+- Add click handler on Header avatar to navigate to `profile` view.
+
+### Styling
+- Use existing Tailwind CSS classes for consistent styling.
 
 ## Verification Plan
-### Automated Tests
-- N/A (Project currently has no test runner).
 
 ### Manual Verification
-- **Dashboard**: Verify stats match recorded sessions. Check visualizations.
-- **Templates**: Create a template, use it to start a session, verify fields are prefilled.
-- **Streaks**: Manually manipulate local storage (or create sessions) to verify streak calculation.
-- **Achievements**: Verify achievements unlock when conditions are met.
-- **Export**: Download JSON and verify content.
+1.  **Navigation**: Click the "Profile" link/avatar in the header. Verify it navigates to the Profile page.
+2.  **Profile Page**:
+    - Verify initial state (empty or loaded from localStorage).
+    - Enter name, bio, select session type.
+    - Upload an image. Verify preview updates immediately.
+    - Click "Save". Verify success message.
+    - Reload page. Verify data persists.
+    - Click "Remove avatar". Verify avatar reverts to placeholder.
+3.  **Header**:
+    - Verify avatar appears in the header after saving.
+    - Verify clicking header avatar goes to Profile page.
