@@ -1,65 +1,74 @@
-# Mindtrack Rename & Calendar Feature Implementation Plan
+# Session Review Modal Implementation Plan
 
 ## Goal Description
-Rename the application from "Focus Session Analyzer" to "Mindtrack" and introduce a new "Calendar Overview" page. This page will provide a monthly view of focus time, respecting the user's "Day Starts At" preference.
+Implement an end-of-session Review Modal that allows users to review and enrich session data (type, goal, rating, tags, notes) before saving. This replaces the current `SessionEnd` view and adds "Discard" and "Cancel" functionality.
 
 ## User Review Required
 > [!NOTE]
-> The app name change will be reflected in the browser title, header, and welcome message.
+> The `SessionEnd` component will be removed and replaced by a modal within `ActiveSession`.
 
 ## Proposed Changes
 
-### Renaming
-#### [MODIFY] [index.html](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/index.html)
-- Change `<title>` to "Mindtrack".
-
-#### [MODIFY] [App.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/App.jsx)
-- Update Header title to "Mindtrack".
-- Update Welcome message to "Mindtrack".
-- Update "F" logo to "M" (optional but nice).
-
-### Calendar Feature
-#### [NEW] [Calendar.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/Calendar.jsx)
-- **State**: `currentDate` (Date object, defaults to now), `selectedDay` (Date object or null).
-- **Props**: `sessions`, `dayStartHour`.
-- **Logic**:
-    - `daysInMonth`: Calculate days for the current month view.
-    - `getUserDayId(date, dayStartHour)`: Reuse or import from `AnalyticsService` (might need to export it if not already).
-    - Group sessions by `userDayId`.
-    - Calculate total duration per day.
-    - Determine intensity level (0, 0-30, 31-90, >90).
+### Components
+#### [NEW] [SessionReviewModal.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/SessionReviewModal.jsx)
+- **Props**: `session` (current data), `onSave`, `onDiscard`, `onCancel`.
+- **State**: `sessionType`, `activityLabel`, `goal`, `goalStatus`, `focusRating`, `tags`, `note`.
 - **UI**:
-    - Header: Month/Year label, Prev/Next buttons.
-    - Grid: 7 columns (Mon-Sun).
-    - Cells: Day number, intensity background.
-    - Legend: Explain intensity colors.
-    - Detail View (Modal/Panel): Show sessions for selected day.
+    - Header: Duration, Start/End time.
+    - Fields:
+        - Session Type (Dropdown).
+        - Activity Label (Input).
+        - Goal (Input + Status Radios).
+        - Focus Rating (Stars/Number).
+        - Tags (Input).
+        - Note (Textarea).
+    - Footer: "Save Session" (Primary), "Discard Session" (Secondary/Danger), "Back" (Ghost).
+
+#### [MODIFY] [ActiveSession.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/ActiveSession.jsx)
+- **State**: Add `isReviewing` (boolean).
+- **Logic**:
+    - `handleEnd`: Pause timer (stop interval), set `isReviewing(true)`.
+    - Render `SessionReviewModal` when `isReviewing` is true.
+    - `handleSave`: Call `onEndSession` with final data.
+    - `handleDiscard`: Call `onDiscard`.
+    - `handleCancel`: Set `isReviewing(false)`, resume timer.
 
 #### [MODIFY] [App.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/App.jsx)
-- Import `Calendar` component.
-- Add `calendar` to `view` state options.
-- Add "Calendar" button to `Nav` component.
-- Render `Calendar` component when `view === 'calendar'`.
+- Remove `SessionEnd` usage.
+- Update `handleEndSession` to perform saving (merge with `handleSaveSession`).
+- Add `handleDiscardSession` (navigate to home).
+- Pass `onDiscard` to `ActiveSession`.
 
-#### [MODIFY] [AnalyticsService](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/utils/analytics.js)
-- Ensure `getUserDayStart` is exported and usable by Calendar (it is).
+#### [DELETE] [SessionEnd.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/SessionEnd.jsx)
+- Component is obsolete.
+
+### Data Display
+#### [MODIFY] [History.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/History.jsx)
+- Display `focusRating` (stars).
+- Display `note` indicator (icon).
+- Display `tags` (pills).
+
+#### [MODIFY] [SessionDetail.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/SessionDetail.jsx)
+- Display `goal` + `goalStatus`.
+- Display `focusRating`.
+- Display `tags`.
+- Display `note`.
 
 ## Verification Plan
 
 ### Manual Verification
-1.  **Renaming**:
-    -   Check browser tab title.
-    -   Check Header title.
-    -   Check Welcome message.
-2.  **Calendar Navigation**:
-    -   Click "Calendar" in nav. Verify Calendar page loads.
-3.  **Calendar Logic**:
-    -   Check current month is displayed.
-    -   Navigate to previous/next months.
-    -   Verify "today" has correct focus time (compare with Dashboard).
-    -   Verify intensity colors match duration.
-4.  **Day Start Hour**:
-    -   Change "Day Starts At" in Profile.
-    -   Verify Calendar updates (sessions before start hour move to previous day).
-5.  **Detail View**:
-    -   Click a day. Verify session list is correct.
+1.  **End Session Flow**:
+    -   Start session -> Click "End Session".
+    -   Verify Modal appears.
+    -   Verify Timer is paused (background).
+2.  **Edit & Save**:
+    -   Change type, add note, set rating.
+    -   Click "Save".
+    -   Verify redirected to Summary/Home.
+    -   Verify data is saved in History.
+3.  **Discard**:
+    -   Start session -> End -> Discard.
+    -   Verify session is NOT in History.
+4.  **Cancel**:
+    -   Start session -> End -> Cancel.
+    -   Verify Modal closes, Timer resumes.

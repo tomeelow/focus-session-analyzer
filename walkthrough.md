@@ -1,38 +1,33 @@
-# Mindtrack Rename & Calendar Walkthrough
+# Session Review Modal Walkthrough
 
-I have successfully renamed the application to "Mindtrack" and added a new Calendar Overview page.
+I have implemented the End-of-Session Review Modal, allowing users to enrich their session data before saving.
 
 ## Changes
 
-### App Rename
-- **App Title**: Changed to "Mindtrack" in the browser tab and app header.
-- **Welcome Message**: Updated to "Mindtrack" on the home page.
-- **Logo**: Updated the "F" logo to "M" in the header.
+### Components
+- **[NEW] `SessionReviewModal`**: A modal component that appears when ending a session.
+    - Allows editing Session Type and Activity Label.
+    - Allows setting/updating Goal and Goal Status.
+    - **New Fields**: Focus Rating (1-5 stars), Tags (comma-separated), and Reflection Note.
+    - Actions: Save Session, Discard Session, Back to Timer.
+- **`ActiveSession`**: Updated to intercept "End Session" and show the modal instead of immediately saving.
+    - Implemented "Pause" behavior (timer stops visually during review).
+    - Handles Save, Discard, and Cancel actions.
+- **`App`**: Removed `SessionEnd` component usage. Updated `handleEndSession` to save directly. Added `handleDiscardSession`.
+- **`History` & `SessionDetail`**: Updated to display the new fields (Rating, Note, Tags).
 
-### Calendar Feature
-- **New Route**: Added `/calendar` route and navigation item.
-- **Month View**: Displays a grid of days for the current month.
-- **Focus Intensity**: Days are color-coded based on total focus duration:
-    - 0 min: Light gray
-    - 1-30 min: Light green
-    - 31-90 min: Medium green
-    - >90 min: Dark green
-- **Day Details**: Clicking a day opens a modal showing:
-    - Total focus time for that day.
-    - List of sessions with type, duration, and status.
-- **Navigation**: Users can switch between months using previous/next buttons.
-- **Profile Integration**: Respects the user's "Day Starts At" preference for grouping sessions.
+### Verification Results
 
-## Verification Results
-
-### Automated Browser Verification
-I ran a browser verification session to ensure the rename and calendar functionality work as expected.
+#### Automated Browser Verification
+I ran browser verification to ensure the modal appears and the save flow works.
 
 **Steps Performed:**
-1.  Verified "Mindtrack" title and header.
-2.  Navigated to the Calendar page.
-3.  Verified month rendering and navigation.
-4.  Opened day detail modal for the current day.
+1.  Started a session.
+2.  Ended the session.
+3.  Verified the "Session Review" modal appeared.
+4.  Saved the session.
+5.  Verified redirection to Session Summary.
 
 **Proof of Success:**
-![Calendar Page](/Users/ivantomilo/.gemini/antigravity/brain/8d506345-5bf3-4f83-807f-8942df71a307/calendar_page_1764460689518.png)
+![Review Modal](/Users/ivantomilo/.gemini/antigravity/brain/8d506345-5bf3-4f83-807f-8942df71a307/review_modal_1764461710661.png)
+![Session Summary](/Users/ivantomilo/.gemini/antigravity/brain/8d506345-5bf3-4f83-807f-8942df71a307/session_summary_1764461878841.png)

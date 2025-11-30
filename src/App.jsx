@@ -4,7 +4,7 @@ import { AnalyticsService } from './utils/analytics';
 import { AchievementService } from './utils/achievements';
 import { ActiveSession } from './components/ActiveSession';
 import { SessionSetup } from './components/SessionSetup';
-import { SessionEnd } from './components/SessionEnd';
+
 import { SessionSummary } from './components/SessionSummary';
 import { History } from './components/History';
 import { SessionDetail } from './components/SessionDetail';
@@ -48,12 +48,7 @@ function App() {
     setView('running');
   };
 
-  const handleEndSession = (sessionData) => {
-    setCompletedSession(sessionData);
-    setView('end');
-  };
-
-  const handleSaveSession = (finalSession) => {
+  const handleEndSession = (finalSession) => {
     StorageService.saveSession(finalSession);
     const updatedSessions = StorageService.getSessions();
     setSessions(updatedSessions);
@@ -65,6 +60,11 @@ function App() {
 
     setCompletedSession(finalSession);
     setView('summary');
+  };
+
+  const handleDiscardSession = () => {
+    setView('home');
+    setCurrentSessionConfig(null);
   };
 
   const handleCloseSummary = () => {
@@ -232,11 +232,11 @@ function App() {
           )}
 
           {view === 'running' && currentSessionConfig && (
-            <ActiveSession initialConfig={currentSessionConfig} onEndSession={handleEndSession} />
-          )}
-
-          {view === 'end' && completedSession && (
-            <SessionEnd session={completedSession} onComplete={handleSaveSession} />
+            <ActiveSession
+              initialConfig={currentSessionConfig}
+              onEndSession={handleEndSession}
+              onDiscard={handleDiscardSession}
+            />
           )}
 
           {view === 'summary' && completedSession && (
@@ -254,6 +254,8 @@ function App() {
       </div>
     </div>
   );
+
+
 }
 
 export default App;
