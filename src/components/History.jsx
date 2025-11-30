@@ -69,6 +69,28 @@ export function History({ sessions, onSelectSession }) {
                 {formatTime(session.startTime)} - {formatTime(session.endTime)}
                 {session.activityLabel && " • " + session.activityLabel}
               </span>
+              <div className="flex items-center gap-2 mt-1">
+                {session.focusRating && (
+                  <span className="flex items-center text-xs text-yellow-600 bg-yellow-50 px-1.5 py-0.5 rounded">
+                    ★ {session.focusRating}
+                  </span>
+                )}
+                {session.note && (
+                  <span className="text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded flex items-center gap-1">
+                    📝 Note
+                  </span>
+                )}
+                {session.tags && session.tags.length > 0 && (
+                  <div className="flex gap-1">
+                    {session.tags.slice(0, 2).map(tag => (
+                      <span key={tag} className="text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
+                        #{tag}
+                      </span>
+                    ))}
+                    {session.tags.length > 2 && <span className="text-xs text-gray-400">+{session.tags.length - 2}</span>}
+                  </div>
+                )}
+              </div>
             </div>
             <div className="flex items-center gap-6">
               <div className="text-right">

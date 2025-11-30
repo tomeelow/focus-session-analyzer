@@ -1,25 +1,18 @@
-# Task: Rename to Mindtrack & Add Calendar
+# Task: Add Session Review Modal
 
-- [x] Create feature branch `feature/mindtrack-calendar` <!-- id: 0 -->
+- [x] Create feature branch `feature/session-review` <!-- id: 0 -->
 - [x] Planning <!-- id: 1 -->
-    - [x] Explore codebase for name occurrences <!-- id: 2 -->
-    - [x] Explore `AnalyticsService` for date logic reuse <!-- id: 3 -->
+    - [x] Explore active session and saving logic <!-- id: 2 -->
+    - [x] Explore history and detail views <!-- id: 3 -->
     - [x] Create implementation plan <!-- id: 4 -->
 - [x] Implementation <!-- id: 5 -->
-    - [x] Rename App to "Mindtrack" <!-- id: 6 -->
-        - [x] Update `index.html` title <!-- id: 7 -->
-        - [x] Update Header in `App.jsx` <!-- id: 8 -->
-        - [x] Update Welcome message in `App.jsx` <!-- id: 9 -->
-    - [x] Implement Calendar Feature <!-- id: 10 -->
-        - [x] Create `Calendar` component <!-- id: 11 -->
-            - [x] Month view logic <!-- id: 12 -->
-            - [x] Day cell rendering with intensity <!-- id: 13 -->
-            - [x] Session grouping by `userDayId` <!-- id: 14 -->
-            - [x] Detail view (modal/panel) <!-- id: 15 -->
-        - [x] Add Route in `App.jsx` <!-- id: 16 -->
-        - [x] Update Navigation <!-- id: 17 -->
-- [x] Verification <!-- id: 18 -->
-    - [x] Verify App Name changes <!-- id: 19 -->
-    - [x] Verify Calendar rendering and navigation <!-- id: 20 -->
-    - [x] Verify Data aggregation and `dayStartHour` logic <!-- id: 21 -->
-    - [x] Verify Day detail view <!-- id: 22 -->
+    - [x] Create `SessionReviewModal` component <!-- id: 6 -->
+    - [x] Update `App.jsx` / `ActiveSession` to intercept "End Session" <!-- id: 7 -->
+    - [x] Update `StorageService` (if needed) and Session Model <!-- id: 8 -->
+    - [x] Update `History` component to show new fields <!-- id: 9 -->
+    - [x] Update `SessionDetail` component (if exists) <!-- id: 10 -->
+- [x] Verification <!-- id: 11 -->
+    - [x] Verify "End Session" opens modal <!-- id: 12 -->
+    - [x] Verify saving with new fields (note, tags, rating) <!-- id: 13 -->
+    - [x] Verify discarding session <!-- id: 14 -->
+    - [x] Verify history display <!-- id: 15 -->
