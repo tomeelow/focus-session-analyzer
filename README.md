@@ -31,6 +31,7 @@ A modern, minimalist web application to help you track your focus sessions, mana
 - **👤 User Profile**: Customize your experience with a display name, bio, and preferred session type.
 - **🖼️ Avatar**: Upload a personal avatar that persists locally and appears in the app header.
 - **⚙️ Focus Preferences**: Set default session duration and custom day start hour (e.g., 4 AM) to tailor analytics to your schedule.
+- **🌙 Light/Dark Mode**: Switch between a soft light theme and a modern dark theme to suit your environment.
 
 ## Tech Stack
 

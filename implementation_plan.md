@@ -1,74 +1,49 @@
-# Session Review Modal Implementation Plan
+# Refine Light/Dark Theme
 
-## Goal Description
-Implement an end-of-session Review Modal that allows users to review and enrich session data (type, goal, rating, tags, notes) before saving. This replaces the current `SessionEnd` view and adds "Discard" and "Cancel" functionality.
+The goal is to soften the current high-contrast theme to a modern, gray-based aesthetic for both light and dark modes.
 
 ## User Review Required
-> [!NOTE]
-> The `SessionEnd` component will be removed and replaced by a modal within `ActiveSession`.
+- **Color Palette Changes**: The entire app's color scheme will shift from black/white/green to gray/off-white/indigo.
+- **Heatmap Colors**: Heatmaps will change from green to indigo to match the new accent color.
 
 ## Proposed Changes
 
+### CSS Variables & Tailwind Config
+#### [MODIFY] [index.css](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/index.css)
+- Update `:root` and `.dark` variables to the new gray-based palette.
+- Map user's requested variable names to existing names to minimize refactoring:
+    - `--background`: `#f5f5f7` (light) / `#111217` (dark)
+    - `--surface`: `#ffffff` (light) / `#181920` (dark)
+    - `--surface-highlight`: `#f1f2f4` (light) / `#1f2129` (dark)
+    - `--text-primary`: `#111827` (light) / `#e5e7eb` (dark)
+    - `--text-secondary`: `#6b7280` (light) / `#9ca3af` (dark)
+    - `--border`: `#e5e7eb` (light) / `#2d3038` (dark)
+    - `--accent`: `#818cf8` (light) / `#a5b4fc` (dark)
+    - `--accent-soft`: `#eef2ff` (light) / `#272a3b` (dark) (NEW)
+
+#### [MODIFY] [tailwind.config.js](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/tailwind.config.js)
+- Update color definitions to match the new variables.
+- Add `accent-soft` to the color palette.
+
 ### Components
-#### [NEW] [SessionReviewModal.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/SessionReviewModal.jsx)
-- **Props**: `session` (current data), `onSave`, `onDiscard`, `onCancel`.
-- **State**: `sessionType`, `activityLabel`, `goal`, `goalStatus`, `focusRating`, `tags`, `note`.
-- **UI**:
-    - Header: Duration, Start/End time.
-    - Fields:
-        - Session Type (Dropdown).
-        - Activity Label (Input).
-        - Goal (Input + Status Radios).
-        - Focus Rating (Stars/Number).
-        - Tags (Input).
-        - Note (Textarea).
-    - Footer: "Save Session" (Primary), "Discard Session" (Secondary/Danger), "Back" (Ghost).
+#### [MODIFY] [Calendar.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/Calendar.jsx)
+- Update heatmap intensity classes to use `bg-accent` and `bg-accent-soft` with varying opacities instead of green.
 
-#### [MODIFY] [ActiveSession.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/ActiveSession.jsx)
-- **State**: Add `isReviewing` (boolean).
-- **Logic**:
-    - `handleEnd`: Pause timer (stop interval), set `isReviewing(true)`.
-    - Render `SessionReviewModal` when `isReviewing` is true.
-    - `handleSave`: Call `onEndSession` with final data.
-    - `handleDiscard`: Call `onDiscard`.
-    - `handleCancel`: Set `isReviewing(false)`, resume timer.
-
-#### [MODIFY] [App.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/App.jsx)
-- Remove `SessionEnd` usage.
-- Update `handleEndSession` to perform saving (merge with `handleSaveSession`).
-- Add `handleDiscardSession` (navigate to home).
-- Pass `onDiscard` to `ActiveSession`.
-
-#### [DELETE] [SessionEnd.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/SessionEnd.jsx)
-- Component is obsolete.
-
-### Data Display
-#### [MODIFY] [History.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/History.jsx)
-- Display `focusRating` (stars).
-- Display `note` indicator (icon).
-- Display `tags` (pills).
+#### [MODIFY] [Dashboard.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/Dashboard.jsx)
+- Update heatmap intensity classes to match `Calendar.jsx`.
 
 #### [MODIFY] [SessionDetail.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/SessionDetail.jsx)
-- Display `goal` + `goalStatus`.
-- Display `focusRating`.
-- Display `tags`.
-- Display `note`.
+- Update status badges (green/yellow/red) to be softer or use the new palette if appropriate, but keeping semantic meaning (success/warning/error) is usually best. Will soften the colors if possible using `accent` or just softer standard colors.
 
 ## Verification Plan
-
 ### Manual Verification
-1.  **End Session Flow**:
-    -   Start session -> Click "End Session".
-    -   Verify Modal appears.
-    -   Verify Timer is paused (background).
-2.  **Edit & Save**:
-    -   Change type, add note, set rating.
-    -   Click "Save".
-    -   Verify redirected to Summary/Home.
-    -   Verify data is saved in History.
-3.  **Discard**:
-    -   Start session -> End -> Discard.
-    -   Verify session is NOT in History.
-4.  **Cancel**:
-    -   Start session -> End -> Cancel.
-    -   Verify Modal closes, Timer resumes.
+- Check Light Mode:
+    - Background is soft gray (`#f5f5f7`).
+    - Cards are white.
+    - Text is dark gray.
+- Check Dark Mode:
+    - Background is dark gray (`#111217`).
+    - Cards are slightly lighter gray (`#181920`).
+    - Text is off-white.
+- Toggle between modes to ensure smooth transition.
+- Check Calendar and Dashboard heatmaps for visibility and aesthetics.
