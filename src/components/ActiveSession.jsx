@@ -80,17 +80,17 @@ export function ActiveSession({ initialConfig, onEndSession, onDiscard }) {
     <>
       <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8 animate-in fade-in duration-500">
         <div className="text-center space-y-2">
-          <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wider">
+          <h2 className="text-sm font-medium text-text-secondary uppercase tracking-wider">
             {initialConfig.sessionType} {initialConfig.activityLabel && "• " + initialConfig.activityLabel}
           </h2>
-          <div className="text-8xl font-bold tracking-tighter tabular-nums text-gray-900">
+          <div className="text-8xl font-bold tracking-tighter tabular-nums text-text-primary">
             {formatDuration(elapsed)}
           </div>
           {initialConfig.goal && (
-            <p className="text-gray-500 text-sm max-w-md mx-auto">Goal: {initialConfig.goal}</p>
+            <p className="text-text-secondary text-sm max-w-md mx-auto">Goal: {initialConfig.goal}</p>
           )}
           {isOnBreak && (
-            <div className="inline-flex items-center px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 text-sm font-medium">
+            <div className="inline-flex items-center px-3 py-1 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 text-sm font-medium">
               <Coffee className="w-4 h-4 mr-2" />
               On Break
             </div>
@@ -114,36 +114,36 @@ export function ActiveSession({ initialConfig, onEndSession, onDiscard }) {
             </Button>
           </div>
 
-          <div className="border-t border-gray-100 pt-6">
-            <p className="text-center text-sm text-gray-500 mb-4">Log a distraction</p>
+          <div className="border-t border-border pt-6">
+            <p className="text-center text-sm text-text-secondary mb-4">Log a distraction</p>
             <div className="grid grid-cols-4 gap-3">
-              <Button variant="outline" className="h-20 flex flex-col gap-2 hover:bg-gray-50" onClick={() => logEvent('distraction', 'Phone')}>
-                <Smartphone className="w-5 h-5 text-gray-600" />
-                <span className="text-xs text-gray-600">Phone</span>
+              <Button variant="outline" className="h-20 flex flex-col gap-2 hover:bg-surface-highlight" onClick={() => logEvent('distraction', 'Phone')}>
+                <Smartphone className="w-5 h-5 text-text-secondary" />
+                <span className="text-xs text-text-secondary">Phone</span>
               </Button>
-              <Button variant="outline" className="h-20 flex flex-col gap-2 hover:bg-gray-50" onClick={() => logEvent('distraction', 'Social Media')}>
-                <MessageCircle className="w-5 h-5 text-gray-600" />
-                <span className="text-xs text-gray-600">Social</span>
+              <Button variant="outline" className="h-20 flex flex-col gap-2 hover:bg-surface-highlight" onClick={() => logEvent('distraction', 'Social Media')}>
+                <MessageCircle className="w-5 h-5 text-text-secondary" />
+                <span className="text-xs text-text-secondary">Social</span>
               </Button>
-              <Button variant="outline" className="h-20 flex flex-col gap-2 hover:bg-gray-50" onClick={() => logEvent('distraction', 'Hunger')}>
-                <Utensils className="w-5 h-5 text-gray-600" />
-                <span className="text-xs text-gray-600">Hunger</span>
+              <Button variant="outline" className="h-20 flex flex-col gap-2 hover:bg-surface-highlight" onClick={() => logEvent('distraction', 'Hunger')}>
+                <Utensils className="w-5 h-5 text-text-secondary" />
+                <span className="text-xs text-text-secondary">Hunger</span>
               </Button>
-              <Button variant="outline" className="h-20 flex flex-col gap-2 hover:bg-gray-50" onClick={() => setShowOtherInput(true)}>
-                <MoreHorizontal className="w-5 h-5 text-gray-600" />
-                <span className="text-xs text-gray-600">Other</span>
+              <Button variant="outline" className="h-20 flex flex-col gap-2 hover:bg-surface-highlight" onClick={() => setShowOtherInput(true)}>
+                <MoreHorizontal className="w-5 h-5 text-text-secondary" />
+                <span className="text-xs text-text-secondary">Other</span>
               </Button>
             </div>
           </div>
         </div>
 
         {showOtherInput && (
-          <div className="fixed inset-0 bg-black/20 flex items-center justify-center p-4 backdrop-blur-sm z-50">
-            <Card className="w-full max-w-sm p-6 space-y-4 shadow-xl">
-              <h3 className="text-lg font-semibold">What distracted you?</h3>
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 backdrop-blur-sm z-50">
+            <Card className="w-full max-w-sm p-6 space-y-4 shadow-xl bg-surface">
+              <h3 className="text-lg font-semibold text-text-primary">What distracted you?</h3>
               <input
                 type="text"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900"
+                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-accent bg-surface text-text-primary placeholder:text-text-secondary"
                 placeholder="Reason..."
                 value={otherReason}
                 onChange={(e) => setOtherReason(e.target.value)}

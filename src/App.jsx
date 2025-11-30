@@ -15,9 +15,11 @@ import { Profile } from './components/Profile';
 import { Calendar } from './components/Calendar';
 import { ProfileService } from './services/profile';
 import { Button } from './components/Button';
-import { Play, LayoutDashboard, History as HistoryIcon, Trophy, Download, User, Calendar as CalendarIcon } from 'lucide-react';
+import { useTheme } from './context/ThemeContext';
+import { Play, LayoutDashboard, History as HistoryIcon, Trophy, Download, User, Calendar as CalendarIcon, Sun, Moon } from 'lucide-react';
 
 function App() {
+  const { theme, toggleTheme } = useTheme();
   const [view, setView] = useState('home'); // home, setup, running, end, summary, detail, dashboard, achievements
   const [sessions, setSessions] = useState([]);
   const [achievements, setAchievements] = useState([]);
@@ -99,10 +101,10 @@ function App() {
 
   // Navigation Component
   const Nav = () => (
-    <nav className="flex items-center justify-center gap-1 p-1 bg-gray-100/50 rounded-full mb-8 mx-auto w-fit backdrop-blur-sm">
+    <nav className="flex items-center justify-center gap-1 p-1 bg-surface border border-border rounded-full mb-8 mx-auto w-fit backdrop-blur-sm">
       <button
         onClick={() => setView('home')}
-        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${view === 'home' || view === 'setup' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${view === 'home' || view === 'setup' ? 'bg-background text-text-primary shadow-sm' : 'text-text-secondary hover:text-text-primary'
           }`}
       >
         <div className="flex items-center gap-2">
@@ -112,7 +114,7 @@ function App() {
       </button>
       <button
         onClick={() => setView('dashboard')}
-        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${view === 'dashboard' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${view === 'dashboard' ? 'bg-background text-text-primary shadow-sm' : 'text-text-secondary hover:text-text-primary'
           }`}
       >
         <div className="flex items-center gap-2">
@@ -122,7 +124,7 @@ function App() {
       </button>
       <button
         onClick={() => setView('calendar')}
-        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${view === 'calendar' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${view === 'calendar' ? 'bg-background text-text-primary shadow-sm' : 'text-text-secondary hover:text-text-primary'
           }`}
       >
         <div className="flex items-center gap-2">
@@ -132,7 +134,7 @@ function App() {
       </button>
       <button
         onClick={() => setView('history')}
-        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${view === 'history' || view === 'detail' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${view === 'history' || view === 'detail' ? 'bg-background text-text-primary shadow-sm' : 'text-text-secondary hover:text-text-primary'
           }`}
       >
         <div className="flex items-center gap-2">
@@ -142,7 +144,7 @@ function App() {
       </button>
       <button
         onClick={() => setView('achievements')}
-        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${view === 'achievements' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${view === 'achievements' ? 'bg-background text-text-primary shadow-sm' : 'text-text-secondary hover:text-text-primary'
           }`}
       >
         <div className="flex items-center gap-2">
@@ -158,30 +160,33 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 font-sans selection:bg-gray-200">
+    <div className="min-h-screen bg-background text-text-primary font-sans selection:bg-accent selection:text-accent-foreground transition-colors duration-300">
       <div className="max-w-4xl mx-auto px-4 py-8 md:py-12 space-y-8">
-        <header className="flex items-center justify-between pb-6 border-b border-gray-100">
+        <header className="flex items-center justify-between pb-6 border-b border-border">
           <h1
             className="text-xl font-bold tracking-tight flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
             onClick={() => setView('home')}
           >
-            <span className="w-8 h-8 bg-gray-900 text-white rounded-lg flex items-center justify-center text-lg">M</span>
+            <span className="w-8 h-8 bg-accent text-accent-foreground rounded-lg flex items-center justify-center text-lg">M</span>
             Mindtrack
           </h1>
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm" onClick={handleExport} className="text-gray-500 hover:text-gray-900">
+            <Button variant="ghost" size="sm" onClick={toggleTheme} className="text-text-secondary hover:text-text-primary">
+              {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+            </Button>
+            <Button variant="ghost" size="sm" onClick={handleExport} className="text-text-secondary hover:text-text-primary">
               <Download className="w-4 h-4 mr-2" />
               Export Data
             </Button>
             <button
               onClick={() => setView('profile')}
-              className="w-8 h-8 rounded-full overflow-hidden bg-gray-100 border border-gray-200 flex items-center justify-center hover:ring-2 hover:ring-gray-900 transition-all"
+              className="w-8 h-8 rounded-full overflow-hidden bg-surface border border-border flex items-center justify-center hover:ring-2 hover:ring-accent transition-all"
               title="User Profile"
             >
               {userProfile?.avatarDataUrl ? (
                 <img src={userProfile.avatarDataUrl} alt="Profile" className="w-full h-full object-cover" />
               ) : (
-                <User className="w-4 h-4 text-gray-400" />
+                <User className="w-4 h-4 text-text-secondary" />
               )}
             </button>
           </div>

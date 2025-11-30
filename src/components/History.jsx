@@ -9,7 +9,7 @@ export function History({ sessions, onSelectSession }) {
 
   if (sessions.length === 0) {
     return (
-      <div className="text-center py-12 text-gray-500 border-2 border-dashed border-gray-100 rounded-xl">
+      <div className="text-center py-12 text-text-secondary border-2 border-dashed border-border rounded-xl">
         No sessions yet. Start one above!
       </div>
     );
@@ -33,7 +33,7 @@ export function History({ sessions, onSelectSession }) {
         <h3 className="text-lg font-semibold">Recent Sessions</h3>
         <div className="flex gap-2">
           <select
-            className="text-sm border-gray-200 rounded-md py-1 pl-2 pr-8"
+            className="text-sm border-border rounded-md py-1 pl-2 pr-8 bg-surface text-text-primary"
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
           >
@@ -42,7 +42,7 @@ export function History({ sessions, onSelectSession }) {
           <input
             type="text"
             placeholder="Filter tags..."
-            className="text-sm border border-gray-200 rounded-md px-2 py-1 w-32"
+            className="text-sm border border-border rounded-md px-2 py-1 w-32 bg-surface text-text-primary placeholder:text-text-secondary"
             value={tagFilter}
             onChange={(e) => setTagFilter(e.target.value)}
           />
@@ -53,41 +53,41 @@ export function History({ sessions, onSelectSession }) {
         {filteredSessions.map((session, i) => (
           <Card
             key={i}
-            className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors cursor-pointer group"
+            className="p-4 flex items-center justify-between hover:bg-surface-highlight transition-colors cursor-pointer group"
             onClick={() => onSelectSession(session)}
           >
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-2">
-                <span className="font-medium text-gray-900">
+                <span className="font-medium text-text-primary">
                   {new Date(session.startTime).toLocaleDateString()}
                 </span>
-                <span className="text-xs px-2 py-0.5 bg-gray-100 rounded-full text-gray-600">
+                <span className="text-xs px-2 py-0.5 bg-surface-highlight rounded-full text-text-secondary">
                   {session.sessionType || 'Study'}
                 </span>
               </div>
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-text-secondary">
                 {formatTime(session.startTime)} - {formatTime(session.endTime)}
                 {session.activityLabel && " • " + session.activityLabel}
               </span>
               <div className="flex items-center gap-2 mt-1">
                 {session.focusRating && (
-                  <span className="flex items-center text-xs text-yellow-600 bg-yellow-50 px-1.5 py-0.5 rounded">
+                  <span className="flex items-center text-xs text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 px-1.5 py-0.5 rounded">
                     ★ {session.focusRating}
                   </span>
                 )}
                 {session.note && (
-                  <span className="text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded flex items-center gap-1">
+                  <span className="text-xs text-text-secondary bg-surface-highlight px-1.5 py-0.5 rounded flex items-center gap-1">
                     📝 Note
                   </span>
                 )}
                 {session.tags && session.tags.length > 0 && (
                   <div className="flex gap-1">
                     {session.tags.slice(0, 2).map(tag => (
-                      <span key={tag} className="text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
+                      <span key={tag} className="text-xs text-text-secondary bg-surface-highlight px-1.5 py-0.5 rounded">
                         #{tag}
                       </span>
                     ))}
-                    {session.tags.length > 2 && <span className="text-xs text-gray-400">+{session.tags.length - 2}</span>}
+                    {session.tags.length > 2 && <span className="text-xs text-text-secondary opacity-70">+{session.tags.length - 2}</span>}
                   </div>
                 )}
               </div>
@@ -95,11 +95,11 @@ export function History({ sessions, onSelectSession }) {
             <div className="flex items-center gap-6">
               <div className="text-right">
                 <div className="font-medium">{formatDuration(session.totalDuration)}</div>
-                <div className="text-xs text-gray-500">
+                <div className="text-xs text-text-secondary">
                   {session.events ? session.events.length : (session.distractions ? session.distractions.length : 0)} events
                 </div>
               </div>
-              <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-gray-500 transition-colors" />
+              <ChevronRight className="w-5 h-5 text-border group-hover:text-text-secondary transition-colors" />
             </div>
           </Card>
         ))}

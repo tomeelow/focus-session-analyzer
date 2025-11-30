@@ -18,22 +18,22 @@ export function SessionDetail({ session, onClose }) {
                 <Card className="p-6 space-y-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <div className="text-sm text-gray-500">Total Duration</div>
-                            <div className="text-3xl font-bold text-gray-900">
+                            <div className="text-sm text-text-secondary">Total Duration</div>
+                            <div className="text-3xl font-bold text-text-primary">
                                 {formatDuration(session.totalDuration)}
                             </div>
                         </div>
                         <div className="text-right">
-                            <div className="text-sm text-gray-500">Date</div>
+                            <div className="text-sm text-text-secondary">Date</div>
                             <div className="font-medium">
                                 {new Date(session.startTime).toLocaleDateString()}
                             </div>
                         </div>
                     </div>
 
-                    <div className="space-y-4 pt-4 border-t border-gray-100">
+                    <div className="space-y-4 pt-4 border-t border-border">
                         <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2 text-gray-600">
+                            <div className="flex items-center gap-2 text-text-secondary">
                                 <Clock className="w-4 h-4" />
                                 <span>Time</span>
                             </div>
@@ -43,18 +43,18 @@ export function SessionDetail({ session, onClose }) {
                         </div>
 
                         <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2 text-gray-600">
+                            <div className="flex items-center gap-2 text-text-secondary">
                                 <Tag className="w-4 h-4" />
                                 <span>Type</span>
                             </div>
-                            <span className="px-2 py-1 bg-gray-100 rounded-md text-sm font-medium">
+                            <span className="px-2 py-1 bg-surface-highlight rounded-md text-sm font-medium">
                                 {session.sessionType}
                             </span>
                         </div>
 
                         {session.activityLabel && (
                             <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2 text-gray-600">
+                                <div className="flex items-center gap-2 text-text-secondary">
                                     <Tag className="w-4 h-4" />
                                     <span>Activity</span>
                                 </div>
@@ -64,16 +64,16 @@ export function SessionDetail({ session, onClose }) {
 
                         {session.goal && (
                             <div className="space-y-2">
-                                <div className="flex items-center gap-2 text-gray-600">
+                                <div className="flex items-center gap-2 text-text-secondary">
                                     <Target className="w-4 h-4" />
                                     <span>Goal</span>
                                 </div>
-                                <div className="p-3 bg-gray-50 rounded-md text-sm">
+                                <div className="p-3 bg-surface-highlight rounded-md text-sm">
                                     <div className="font-medium">{session.goal}</div>
                                     {session.goalStatus && session.goalStatus !== 'not_set' && (
-                                        <div className={`mt-1 text-xs inline-block px-2 py-0.5 rounded capitalize ${session.goalStatus === 'reached' ? 'bg-green-100 text-green-700' :
-                                                session.goalStatus === 'partially_reached' ? 'bg-yellow-100 text-yellow-700' :
-                                                    'bg-red-100 text-red-700'
+                                        <div className={`mt-1 text-xs inline-block px-2 py-0.5 rounded capitalize ${session.goalStatus === 'reached' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300' :
+                                            session.goalStatus === 'partially_reached' ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300' :
+                                                'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300'
                                             } `}>
                                             {session.goalStatus.replace('_', ' ')}
                                         </div>
@@ -84,7 +84,7 @@ export function SessionDetail({ session, onClose }) {
 
                         {session.focusRating && (
                             <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2 text-gray-600">
+                                <div className="flex items-center gap-2 text-text-secondary">
                                     <Star className="w-4 h-4" />
                                     <span>Focus Rating</span>
                                 </div>
@@ -92,7 +92,7 @@ export function SessionDetail({ session, onClose }) {
                                     {[1, 2, 3, 4, 5].map(star => (
                                         <Star
                                             key={star}
-                                            className={`w-4 h-4 ${star <= session.focusRating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-200'}`}
+                                            className={`w-4 h-4 ${star <= session.focusRating ? 'fill-yellow-400 text-yellow-400' : 'text-border'}`}
                                         />
                                     ))}
                                 </div>
@@ -101,13 +101,13 @@ export function SessionDetail({ session, onClose }) {
 
                         {session.tags && session.tags.length > 0 && (
                             <div className="space-y-2">
-                                <div className="flex items-center gap-2 text-gray-600">
+                                <div className="flex items-center gap-2 text-text-secondary">
                                     <Tag className="w-4 h-4" />
                                     <span>Tags</span>
                                 </div>
                                 <div className="flex flex-wrap gap-2">
                                     {session.tags.map(tag => (
-                                        <span key={tag} className="px-2 py-1 bg-gray-100 rounded-full text-xs text-gray-600">
+                                        <span key={tag} className="px-2 py-1 bg-surface-highlight rounded-full text-xs text-text-secondary">
                                             #{tag}
                                         </span>
                                     ))}
@@ -124,7 +124,7 @@ export function SessionDetail({ session, onClose }) {
                                 <MessageSquare className="w-4 h-4" />
                                 Reflection Note
                             </h3>
-                            <p className="text-gray-600 text-sm whitespace-pre-wrap">
+                            <p className="text-text-secondary text-sm whitespace-pre-wrap">
                                 {session.note}
                             </p>
                         </Card>
@@ -136,25 +136,25 @@ export function SessionDetail({ session, onClose }) {
                             {session.events && session.events.length > 0 ? (
                                 session.events.map((event, i) => (
                                     <div key={i} className="flex items-start gap-3 text-sm">
-                                        <div className="min-w-[60px] text-gray-500 font-mono text-xs pt-0.5">
+                                        <div className="min-w-[60px] text-text-secondary font-mono text-xs pt-0.5">
                                             {formatTime(event.timestamp)}
                                         </div>
                                         <div>
-                                            <span className={`font-medium ${event.type === 'flow' ? 'text-yellow-600' :
-                                                    event.type === 'milestone' ? 'text-green-600' :
-                                                        event.type === 'distraction' ? 'text-red-600' :
-                                                            'text-blue-600'
+                                            <span className={`font-medium ${event.type === 'flow' ? 'text-yellow-600 dark:text-yellow-400' :
+                                                event.type === 'milestone' ? 'text-green-600 dark:text-green-400' :
+                                                    event.type === 'distraction' ? 'text-red-600 dark:text-red-400' :
+                                                        'text-blue-600 dark:text-blue-400'
                                                 }`}>
                                                 {event.type.charAt(0).toUpperCase() + event.type.slice(1)}
                                             </span>
                                             {event.reason && (
-                                                <span className="text-gray-500"> • {event.reason}</span>
+                                                <span className="text-text-secondary"> • {event.reason}</span>
                                             )}
                                         </div>
                                     </div>
                                 ))
                             ) : (
-                                <div className="text-gray-500 text-sm italic">No events logged during this session.</div>
+                                <div className="text-text-secondary text-sm italic">No events logged during this session.</div>
                             )}
                         </div>
                     </Card>

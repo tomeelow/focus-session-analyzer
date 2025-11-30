@@ -64,16 +64,16 @@ export function Profile(props) {
         <div className="max-w-2xl mx-auto space-y-8 animate-in fade-in duration-500">
             <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tight">User Profile</h2>
-                <p className="text-gray-500">Manage your personal information and preferences.</p>
+                <p className="text-text-secondary">Manage your personal information and preferences.</p>
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="bg-surface rounded-xl border border-border shadow-sm overflow-hidden">
                 <div className="p-6 sm:p-8 space-y-8">
 
                     {/* Avatar Section */}
-                    <div className="flex flex-col sm:flex-row items-center gap-6 pb-8 border-b border-gray-100">
+                    <div className="flex flex-col sm:flex-row items-center gap-6 pb-8 border-b border-border">
                         <div className="relative group">
-                            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden bg-gray-100 border-4 border-white shadow-md flex items-center justify-center">
+                            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden bg-surface-highlight border-4 border-surface shadow-md flex items-center justify-center">
                                 {profile.avatarDataUrl ? (
                                     <img
                                         src={profile.avatarDataUrl}
@@ -81,13 +81,13 @@ export function Profile(props) {
                                         className="w-full h-full object-cover"
                                     />
                                 ) : (
-                                    <User className="w-12 h-12 text-gray-300" />
+                                    <User className="w-12 h-12 text-border" />
                                 )}
                             </div>
                         </div>
 
                         <div className="flex flex-col items-center sm:items-start gap-3">
-                            <h3 className="font-medium text-gray-900">Profile Photo</h3>
+                            <h3 className="font-medium text-text-primary">Profile Photo</h3>
                             <div className="flex gap-2">
                                 <Button
                                     variant="outline"
@@ -102,7 +102,7 @@ export function Profile(props) {
                                         variant="ghost"
                                         size="sm"
                                         onClick={handleRemoveAvatar}
-                                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                        className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
                                     >
                                         <X className="w-4 h-4 mr-2" />
                                         Remove
@@ -116,14 +116,14 @@ export function Profile(props) {
                                 accept="image/*"
                                 className="hidden"
                             />
-                            <p className="text-xs text-gray-500">Recommended: Square image, at least 400x400px.</p>
+                            <p className="text-xs text-text-secondary">Recommended: Square image, at least 400x400px.</p>
                         </div>
                     </div>
 
                     {/* Form Section */}
                     <div className="space-y-6">
                         <div className="space-y-2">
-                            <label htmlFor="displayName" className="text-sm font-medium text-gray-700">
+                            <label htmlFor="displayName" className="text-sm font-medium text-text-primary">
                                 Display Name
                             </label>
                             <input
@@ -133,12 +133,12 @@ export function Profile(props) {
                                 value={profile.displayName}
                                 onChange={handleChange}
                                 placeholder="Enter your name"
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                                className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all bg-surface text-text-primary placeholder:text-text-secondary"
                             />
                         </div>
 
                         <div className="space-y-2">
-                            <label htmlFor="bio" className="text-sm font-medium text-gray-700">
+                            <label htmlFor="bio" className="text-sm font-medium text-text-primary">
                                 Bio
                             </label>
                             <textarea
@@ -148,12 +148,12 @@ export function Profile(props) {
                                 onChange={handleChange}
                                 placeholder="Tell us a little about yourself..."
                                 rows={4}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all resize-none"
+                                className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all resize-none bg-surface text-text-primary placeholder:text-text-secondary"
                             />
                         </div>
 
                         <div className="space-y-2">
-                            <label htmlFor="preferredSessionType" className="text-sm font-medium text-gray-700">
+                            <label htmlFor="preferredSessionType" className="text-sm font-medium text-text-primary">
                                 Preferred Session Type
                             </label>
                             <select
@@ -161,7 +161,7 @@ export function Profile(props) {
                                 name="preferredSessionType"
                                 value={profile.preferredSessionType}
                                 onChange={handleChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all bg-white"
+                                className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all bg-surface text-text-primary"
                             >
                                 <option value="">Select a type...</option>
                                 <option value="Study">Study</option>
@@ -173,12 +173,12 @@ export function Profile(props) {
                             </select>
                         </div>
 
-                        <div className="pt-6 border-t border-gray-100 space-y-6">
-                            <h3 className="font-medium text-gray-900">Focus Preferences</h3>
+                        <div className="pt-6 border-t border-border space-y-6">
+                            <h3 className="font-medium text-text-primary">Focus Preferences</h3>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <div className="space-y-2">
-                                    <label htmlFor="defaultSessionDurationMinutes" className="text-sm font-medium text-gray-700">
+                                    <label htmlFor="defaultSessionDurationMinutes" className="text-sm font-medium text-text-primary">
                                         Default Session Duration (minutes)
                                     </label>
                                     <select
@@ -186,7 +186,7 @@ export function Profile(props) {
                                         name="defaultSessionDurationMinutes"
                                         value={profile.defaultSessionDurationMinutes || ''}
                                         onChange={handleChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all bg-white"
+                                        className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all bg-surface text-text-primary"
                                     >
                                         <option value="">No default</option>
                                         <option value="15">15 minutes</option>
@@ -200,7 +200,7 @@ export function Profile(props) {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label htmlFor="dayStartHour" className="text-sm font-medium text-gray-700">
+                                    <label htmlFor="dayStartHour" className="text-sm font-medium text-text-primary">
                                         Day Starts At
                                     </label>
                                     <select
@@ -208,7 +208,7 @@ export function Profile(props) {
                                         name="dayStartHour"
                                         value={profile.dayStartHour !== undefined ? profile.dayStartHour : 0}
                                         onChange={handleChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all bg-white"
+                                        className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all bg-surface text-text-primary"
                                     >
                                         {Array.from({ length: 24 }).map((_, i) => (
                                             <option key={i} value={i}>
@@ -216,7 +216,7 @@ export function Profile(props) {
                                             </option>
                                         ))}
                                     </select>
-                                    <p className="text-xs text-gray-500">
+                                    <p className="text-xs text-text-secondary">
                                         Sessions before this time count as the previous day.
                                     </p>
                                 </div>
@@ -224,10 +224,10 @@ export function Profile(props) {
                         </div>
                     </div>
 
-                    <div className="pt-4 flex items-center justify-between border-t border-gray-100">
+                    <div className="pt-4 flex items-center justify-between border-t border-border">
                         <div className="h-6">
                             {message && (
-                                <span className={`text-sm flex items-center ${message.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
+                                <span className={`text-sm flex items-center ${message.type === 'success' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                                     {message.type === 'success' && <Check className="w-4 h-4 mr-1" />}
                                     {message.text}
                                 </span>

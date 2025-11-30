@@ -48,7 +48,7 @@ export function SessionSetup({ onStart }) {
         <div className="max-w-md mx-auto space-y-8 animate-in fade-in duration-500">
             <div className="text-center space-y-2">
                 <h2 className="text-2xl font-bold tracking-tight">Setup Session</h2>
-                <p className="text-gray-500">What are you focusing on?</p>
+                <p className="text-text-secondary">What are you focusing on?</p>
             </div>
 
             <div className="flex justify-center">
@@ -56,7 +56,7 @@ export function SessionSetup({ onStart }) {
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowTemplates(!showTemplates)}
-                    className="text-gray-600"
+                    className="text-text-secondary hover:text-text-primary"
                 >
                     <LayoutTemplate className="w-4 h-4 mr-2" />
                     {showTemplates ? 'Hide Templates' : 'Use a Template'}
@@ -68,7 +68,7 @@ export function SessionSetup({ onStart }) {
             ) : (
                 <Card className="p-6 space-y-6">
                     <div className="space-y-3">
-                        <label className="text-sm font-medium text-gray-700">Session Type</label>
+                        <label className="text-sm font-medium text-text-primary">Session Type</label>
                         <div className="flex flex-wrap gap-2">
                             {SESSION_TYPES.map(type => (
                                 <button
@@ -77,8 +77,8 @@ export function SessionSetup({ onStart }) {
                                     className={
                                         "px-3 py-2 text-sm rounded-md border transition-all " +
                                         (sessionType === type
-                                            ? "bg-gray-900 text-white border-gray-900 shadow-sm"
-                                            : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50")
+                                            ? "bg-accent text-accent-foreground border-accent shadow-sm"
+                                            : "bg-surface text-text-secondary border-border hover:bg-surface-highlight hover:text-text-primary")
                                     }
                                 >
                                     {type}
@@ -86,7 +86,7 @@ export function SessionSetup({ onStart }) {
                             ))}
                         </div>
                         {defaultDuration && (
-                            <div className="flex items-center gap-2 text-sm text-gray-500 mt-2">
+                            <div className="flex items-center gap-2 text-sm text-text-secondary mt-2">
                                 <Clock className="w-3 h-3" />
                                 <span>Default target: {defaultDuration} min</span>
                             </div>
@@ -94,10 +94,10 @@ export function SessionSetup({ onStart }) {
                     </div>
 
                     <div className="space-y-3">
-                        <label className="text-sm font-medium text-gray-700">Activity Label</label>
+                        <label className="text-sm font-medium text-text-primary">Activity Label</label>
                         <input
                             type="text"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900"
+                            className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-accent bg-surface text-text-primary placeholder:text-text-secondary"
                             placeholder="e.g. Math Revision, Project X"
                             value={activityLabel}
                             onChange={(e) => setActivityLabel(e.target.value)}
@@ -105,9 +105,9 @@ export function SessionSetup({ onStart }) {
                     </div>
 
                     <div className="space-y-3">
-                        <label className="text-sm font-medium text-gray-700">Goal (Optional)</label>
+                        <label className="text-sm font-medium text-text-primary">Goal (Optional)</label>
                         <textarea
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 min-h-[80px]"
+                            className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-accent min-h-[80px] bg-surface text-text-primary placeholder:text-text-secondary"
                             placeholder="What do you want to achieve?"
                             value={goal}
                             onChange={(e) => setGoal(e.target.value)}
