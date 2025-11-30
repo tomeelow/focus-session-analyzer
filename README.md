@@ -9,18 +9,20 @@ A modern, minimalist web application to help you track your focus sessions, mana
 ### Core Focus
 - **🎯 Flexible Sessions**: Choose from various session types (Work, Study, Creative, Planning, Chores) and set specific goals.
 - **⏱️ Focus Timer**: Distraction-free timer to track your deep work sessions.
-- **⚡ Micro-Events**: Log "Flow" states, "Milestones", and take structured "Breaks" without stopping the timer.
-- **📝 Distraction Logging**: Quickly log interruptions with one click (Phone, Social Media, Hunger) or add custom reasons.
-- **⭐ Session Review**: Rate your focus (1-5 stars), mark goal completion status, and add tags after each session.
+- **⏱️ Focus Timer**: Distraction-free timer with customizable duration.
+- **🏷️ Session Tagging**: Categorize sessions by type (Study, Work, Creative, etc.) and add specific goals.
+- **� Distraction Logging**: Quickly log internal and external interruptions to understand what breaks your flow.
+- **📝 Post-Session Reflection**: Rate your focus and add notes after each session.
 
 ### Analytics & Insights
-- **📊 Dashboard**: Get a high-level overview of your productivity with daily/weekly stats and activity heatmaps.
-- **🔥 Streaks**: Track your daily consistency with current and longest streak counters.
-- **🚫 Distraction Insights**: Identify your top distractions with detailed breakdowns and percentage analysis.
-- **🏆 Achievements**: Unlock trophies for hitting milestones like "First Session", "Hat Trick" (3 sessions/day), and "Century Club" (100 mins total).
+- **📊 Dashboard**: Visualize your daily and weekly progress with charts and key metrics.
+- **🔥 Streak Tracking**: Build consistency by tracking consecutive days of focus.
+- **📅 Calendar Overview**: View your focus history in a monthly calendar with intensity heatmaps.
+- **� Distraction Analysis**: Identify top distraction sources to improve your environment.
+- **�️ Activity Heatmap**: See your most productive times of day.
 
 ### Productivity Tools
-- **� Templates**: Create and save reusable session templates (e.g., "Morning Deep Work", "Quick Study") to start faster.
+- ** Templates**: Create and save reusable session templates (e.g., "Morning Deep Work", "Quick Study") to start faster.
 - **📅 History & Filtering**: Browse past sessions and filter by type or tags.
 - **💾 Local Storage**: All data is persisted locally on your device. No account required.
 - **📤 Export Data**: Download your complete history, templates, and achievements as a JSON file for backup.
