@@ -4,6 +4,7 @@ import { AnalyticsService } from './utils/analytics';
 import { AchievementService } from './utils/achievements';
 import { ActiveSession } from './components/ActiveSession';
 import { SessionSetup } from './components/SessionSetup';
+import { AuthScreen } from './components/AuthScreen';
 
 import { SessionSummary } from './components/SessionSummary';
 import { History } from './components/History';
@@ -16,10 +17,11 @@ import { Calendar } from './components/Calendar';
 import { ProfileService } from './services/profile';
 import { Button } from './components/Button';
 import { useTheme } from './context/ThemeContext';
-import { Play, LayoutDashboard, History as HistoryIcon, Trophy, Download, User, Calendar as CalendarIcon, Sun, Moon } from 'lucide-react';
+import { Play, LayoutDashboard, History as HistoryIcon, Trophy, Download, User, Calendar as CalendarIcon, Sun, Moon, LogOut } from 'lucide-react';
 
 function App() {
   const { theme, toggleTheme } = useTheme();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [view, setView] = useState('home'); // home, setup, running, end, summary, detail, dashboard, achievements
   const [sessions, setSessions] = useState([]);
   const [achievements, setAchievements] = useState([]);
@@ -29,6 +31,27 @@ function App() {
   const [userProfile, setUserProfile] = useState(null);
 
   useEffect(() => {
+    checkAuth();
+  }, []);
+
+  const checkAuth = () => {
+    const userId = StorageService.getCurrentUserId();
+    if (userId) {
+      const users = StorageService.getUsers();
+      if (users.some(u => u.id === userId)) {
+        setIsAuthenticated(true);
+        loadUserData();
+      } else {
+        // User ID exists but user not found (maybe deleted?)
+        StorageService.logout();
+        setIsAuthenticated(false);
+      }
+    } else {
+      setIsAuthenticated(false);
+    }
+  };
+
+  const loadUserData = () => {
     const loadedSessions = StorageService.getSessions();
     setSessions(loadedSessions);
 
@@ -39,7 +62,22 @@ function App() {
     // Initial achievement check
     const streaks = AnalyticsService.calculateStreaks(loadedSessions);
     setAchievements(AchievementService.evaluate(loadedSessions, streaks));
-  }, []);
+  };
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+    loadUserData();
+    setView('home');
+  };
+
+  const handleLogout = () => {
+    StorageService.logout();
+    setIsAuthenticated(false);
+    setSessions([]);
+    setUserProfile(null);
+    setAchievements([]);
+    setView('home');
+  };
 
   const handleStartSetup = () => {
     setView('setup');
@@ -159,6 +197,10 @@ function App() {
     setUserProfile(updatedProfile);
   };
 
+  if (!isAuthenticated) {
+    return <AuthScreen onLogin={handleLogin} />;
+  }
+
   return (
     <div className="min-h-screen bg-background text-text-primary font-sans selection:bg-accent selection:text-accent-foreground transition-colors duration-300">
       <div className="max-w-4xl mx-auto px-4 py-8 md:py-12 space-y-8">
@@ -189,6 +231,9 @@ function App() {
                 <User className="w-4 h-4 text-text-secondary" />
               )}
             </button>
+            <Button variant="ghost" size="sm" onClick={handleLogout} className="text-text-secondary hover:text-red-500" title="Log Out">
+              <LogOut className="w-4 h-4" />
+            </Button>
           </div>
         </header>
 
@@ -259,8 +304,6 @@ function App() {
       </div>
     </div>
   );
-
-
 }
 
 export default App;
