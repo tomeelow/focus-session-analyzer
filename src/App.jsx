@@ -5,6 +5,7 @@ import { AchievementService } from './utils/achievements';
 import { ActiveSession } from './components/ActiveSession';
 import { SessionSetup } from './components/SessionSetup';
 import { AuthScreen } from './components/AuthScreen';
+import { MindtrackLogo } from './components/MindtrackLogo';
 
 import { SessionSummary } from './components/SessionSummary';
 import { History } from './components/History';
@@ -205,13 +206,12 @@ function App() {
     <div className="min-h-screen bg-background text-text-primary font-sans selection:bg-accent selection:text-accent-foreground transition-colors duration-300">
       <div className="max-w-4xl mx-auto px-4 py-8 md:py-12 space-y-8">
         <header className="flex items-center justify-between pb-6 border-b border-border">
-          <h1
-            className="text-xl font-bold tracking-tight flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+          <div
+            className="cursor-pointer hover:opacity-80 transition-opacity"
             onClick={() => setView('home')}
           >
-            <span className="w-8 h-8 bg-accent text-accent-foreground rounded-lg flex items-center justify-center text-lg">M</span>
-            Mindtrack
-          </h1>
+            <MindtrackLogo />
+          </div>
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="sm" onClick={toggleTheme} className="text-text-secondary hover:text-text-primary">
               {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}

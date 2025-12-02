@@ -1,63 +1,40 @@
-# Implementation Plan - LocalStorage Authentication
+# Implementation Plan - Branding Update
 
 ## Goal Description
-Add a basic email/password authentication layer to Mindtrack using `localStorage`. This will support multiple users on the same device, with isolated data for each user.
+Update Mindtrack's visual identity with a new minimalist "brain" logo and a unified deep blue accent color (`#1d4ed8`).
 
 ## User Review Required
-> [!IMPORTANT]
-> This is a **demo implementation** of authentication. Passwords will be stored with a simple hash (SHA-256) in `localStorage`. This is **not secure** for production use but sufficient for this demo.
+> [!NOTE]
+> The accent color will be changed to a deep blue. This will affect buttons, links, and other interactive elements.
 
 ## Proposed Changes
 
-### Data Model & Storage
-#### [MODIFY] [storage.js](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/services/storage.js)
-- Add `StoredUser` interface (conceptually).
-- Add methods:
-    - `getUsers()`: Returns list of registered users.
-    - `saveUser(user)`: Adds a new user.
-    - `getCurrentUserId()`: Returns the ID of the logged-in user.
-    - `setCurrentUserId(id)`: Sets the logged-in user.
-    - `logout()`: Clears the current user ID.
-- Update `getSessions`, `saveSession`, `getTemplates`, `saveTemplate`, `getProfile`, `saveProfile` to use `mindtrack.<userId>.*` keys.
-- Add migration logic: If `mindtrack.sessions` exists (old format) and we are signing up the first user, move data to `mindtrack.<userId>.sessions`.
+### Design System
+#### [MODIFY] [index.css](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/index.css)
+- Update `--color-accent` and `--color-accent-soft` variables.
+- Light Mode: `#1d4ed8` (Accent), `#e0ecff` (Soft)
+- Dark Mode: `#60a5fa` (Accent), `#1e293b` (Soft)
 
-### Authentication UI
-#### [NEW] [AuthScreen.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/AuthScreen.jsx)
-- Create a new component for the authentication flow.
-- State: `mode` ('login' | 'signup').
-- Render Login form or Signup form.
-- Handle form submission:
-    - **Signup**: Validate email/password, create user, save to `localStorage`, log in.
-    - **Login**: Find user by email, hash password, compare, log in.
-- Use `crypto.subtle.digest` for password hashing.
+### Components
+#### [NEW] [BrainIcon.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/BrainIcon.jsx)
+- Create a minimalist SVG brain icon.
+- Props: `className`.
 
-### App Integration
+#### [NEW] [MindtrackLogo.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/MindtrackLogo.jsx)
+- Combine `BrainIcon` and "Mindtrack" text.
+- Props: `variant` (full/compact), `className`.
+
+### Integration
 #### [MODIFY] [App.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/App.jsx)
-- Add state `isAuthenticated` (derived from `StorageService.getCurrentUserId()`).
-- On mount, check if user is logged in.
-    - If yes, load data.
-    - If no, show `AuthScreen`.
-- Handle `onLogin` callback from `AuthScreen` to trigger data loading and view switch.
-- Handle `onLogout` callback (pass to `Profile` or Header).
+- Replace the text-based header logo with `MindtrackLogo`.
 
-#### [MODIFY] [Profile.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/Profile.jsx)
-- Add "Log Out" button.
+#### [MODIFY] [AuthScreen.jsx](file:///Users/ivantomilo/Developer/learning/random/study-ses-analyzer/src/components/AuthScreen.jsx)
+- Replace the "M" placeholder with `MindtrackLogo`.
+- Add the tagline "Track your focus. Understand your patterns."
 
 ## Verification Plan
-
 ### Manual Verification
-1.  **Initial Load**: Open app, verify `AuthScreen` is shown.
-2.  **Sign Up**:
-    - Enter valid email/password.
-    - Verify redirection to main app.
-    - Check `localStorage` for `mindtrack.users` and `mindtrack.currentUserId`.
-3.  **Data Isolation**:
-    - Create some sessions.
-    - Log out.
-    - Sign up as User B.
-    - Verify empty session list.
-    - Create sessions for User B.
-    - Log out and log back in as User A.
-    - Verify User A's sessions are restored.
-4.  **Migration**:
-    - (Optional) Manually set old `localStorage` keys and verify they are migrated on first signup.
+- Open the app in Light Mode and Dark Mode.
+- Verify the new accent color on buttons and links.
+- Verify the Logo in the Header.
+- Verify the Logo and Tagline on the Auth Screen (Logout to see it).

@@ -16,12 +16,12 @@
     /* #6b7280 */
     --border: 220 13% 91%;
     /* #e5e7eb */
-    --accent: 235 86% 74%;
-    /* #818cf8 */
+    --accent: 224 76% 48%;
+    /* #1d4ed8 */
     --accent-foreground: 0 0% 100%;
     /* White text on accent */
-    --accent-soft: 226 100% 97%;
-    /* #eef2ff */
+    --accent-soft: 216 100% 94%;
+    /* #e0ecff */
   }
 
   .dark {
@@ -37,12 +37,12 @@
     /* #9ca3af */
     --border: 224 11% 20%;
     /* #2d3038 */
-    --accent: 230 96% 82%;
-    /* #a5b4fc */
+    --accent: 217 91% 68%;
+    /* #60a5fa */
     --accent-foreground: 230 15% 8%;
     /* Dark text on accent */
-    --accent-soft: 231 20% 19%;
-    /* #272a3b */
+    --accent-soft: 217 33% 17%;
+    /* #1e293b */
   }
 
   body {
