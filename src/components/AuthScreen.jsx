@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { StorageService } from '../services/storage';
 import { Button } from './Button';
+import { MindtrackLogo } from './MindtrackLogo';
 import { User, Lock, Mail, ArrowRight, AlertCircle } from 'lucide-react';
 
 export function AuthScreen({ onLogin }) {
@@ -102,16 +103,12 @@ export function AuthScreen({ onLogin }) {
         <div className="min-h-screen flex items-center justify-center bg-background p-4">
             <div className="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="text-center space-y-2">
-                    <div className="mx-auto w-12 h-12 bg-accent text-accent-foreground rounded-xl flex items-center justify-center text-2xl font-bold mb-4">
-                        M
-                    </div>
+                    <MindtrackLogo className="justify-center mb-6" />
                     <h1 className="text-3xl font-bold tracking-tight text-text-primary">
                         {mode === 'login' ? 'Welcome back' : 'Create an account'}
                     </h1>
                     <p className="text-text-secondary">
-                        {mode === 'login'
-                            ? 'Enter your credentials to access your focus data'
-                            : 'Start tracking your focus sessions today'}
+                        Track your focus. Understand your patterns.
                     </p>
                 </div>
 
