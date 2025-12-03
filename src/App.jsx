@@ -18,7 +18,7 @@ import { AchievementsList } from './components/AchievementsList';
 import { SessionSummary } from './components/SessionSummary';
 import { SessionDetail } from './components/SessionDetail';
 import { Profile } from './components/Profile';
-import { Moon, Sun, Download, User, LogOut, Play } from 'lucide-react';
+import { Moon, Sun, Download, User, LogOut, Play, LayoutDashboard, Calendar as CalendarIcon, History as HistoryIcon, Trophy } from 'lucide-react';
 
 // ... (inside App component)
 
@@ -185,6 +185,62 @@ function App() {
     URL.revokeObjectURL(url);
   };
 
+  // Navigation Component
+  const Nav = () => (
+    <nav className="flex items-center justify-center gap-1 p-1 bg-surface border border-border rounded-full mb-8 mx-auto w-fit backdrop-blur-sm">
+      <button
+        onClick={() => setView('home')}
+        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${view === 'home' || view === 'setup' ? 'bg-background text-text-primary shadow-sm' : 'text-text-secondary hover:text-text-primary'
+          }`}
+      >
+        <div className="flex items-center gap-2">
+          <Play className="w-4 h-4" />
+          <span className="hidden sm:inline">Timer</span>
+        </div>
+      </button>
+      <button
+        onClick={() => setView('dashboard')}
+        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${view === 'dashboard' ? 'bg-background text-text-primary shadow-sm' : 'text-text-secondary hover:text-text-primary'
+          }`}
+      >
+        <div className="flex items-center gap-2">
+          <LayoutDashboard className="w-4 h-4" />
+          <span className="hidden sm:inline">Dashboard</span>
+        </div>
+      </button>
+      <button
+        onClick={() => setView('calendar')}
+        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${view === 'calendar' ? 'bg-background text-text-primary shadow-sm' : 'text-text-secondary hover:text-text-primary'
+          }`}
+      >
+        <div className="flex items-center gap-2">
+          <CalendarIcon className="w-4 h-4" />
+          <span className="hidden sm:inline">Calendar</span>
+        </div>
+      </button>
+      <button
+        onClick={() => setView('history')}
+        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${view === 'history' || view === 'detail' ? 'bg-background text-text-primary shadow-sm' : 'text-text-secondary hover:text-text-primary'
+          }`}
+      >
+        <div className="flex items-center gap-2">
+          <HistoryIcon className="w-4 h-4" />
+          <span className="hidden sm:inline">History</span>
+        </div>
+      </button>
+      <button
+        onClick={() => setView('achievements')}
+        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${view === 'achievements' ? 'bg-background text-text-primary shadow-sm' : 'text-text-secondary hover:text-text-primary'
+          }`}
+      >
+        <div className="flex items-center gap-2">
+          <Trophy className="w-4 h-4" />
+          <span className="hidden sm:inline">Trophies</span>
+        </div>
+      </button>
+    </nav>
+  );
+
   if (isPendingVerification) {
     return <VerifyEmailScreen onVerifySuccess={handleVerifySuccess} />;
   }
@@ -228,7 +284,7 @@ function App() {
           </div>
         </header>
 
-        {view !== 'running' && view !== 'end' && view !== 'summary' && null /* <Nav /> */}
+        {view !== 'running' && view !== 'end' && view !== 'summary' && <Nav />}
 
         <main>
           {view === 'home' && (
