@@ -1,35 +1,38 @@
 import { useState, useEffect } from 'react';
 import { StorageService } from './services/storage';
+import { useTheme } from './context/ThemeContext';
 import { AnalyticsService } from './utils/analytics';
 import { AchievementService } from './utils/achievements';
 import { ActiveSession } from './components/ActiveSession';
 import { SessionSetup } from './components/SessionSetup';
+import { VerifyEmailScreen } from './components/VerifyEmailScreen';
 import { AuthScreen } from './components/AuthScreen';
 import { MindtrackLogo } from './components/MindtrackLogo';
-
-import { SessionSummary } from './components/SessionSummary';
-import { History } from './components/History';
-import { SessionDetail } from './components/SessionDetail';
+import { Button } from './components/Button';
+// import { Nav } from './components/Nav';
 import { Stats } from './components/Stats';
 import { Dashboard } from './components/Dashboard';
-import { AchievementsList } from './components/AchievementsList';
-import { Profile } from './components/Profile';
 import { Calendar } from './components/Calendar';
-import { ProfileService } from './services/profile';
-import { Button } from './components/Button';
-import { useTheme } from './context/ThemeContext';
-import { Play, LayoutDashboard, History as HistoryIcon, Trophy, Download, User, Calendar as CalendarIcon, Sun, Moon, LogOut } from 'lucide-react';
+import { History } from './components/History';
+import { AchievementsList } from './components/AchievementsList';
+import { SessionSummary } from './components/SessionSummary';
+import { SessionDetail } from './components/SessionDetail';
+import { Profile } from './components/Profile';
+import { Moon, Sun, Download, User, LogOut, Play } from 'lucide-react';
+
+// ... (inside App component)
 
 function App() {
   const { theme, toggleTheme } = useTheme();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isPendingVerification, setIsPendingVerification] = useState(false);
   const [view, setView] = useState('home'); // home, setup, running, end, summary, detail, dashboard, achievements
   const [sessions, setSessions] = useState([]);
+  const [userProfile, setUserProfile] = useState(null);
   const [achievements, setAchievements] = useState([]);
   const [currentSessionConfig, setCurrentSessionConfig] = useState(null);
   const [completedSession, setCompletedSession] = useState(null);
   const [selectedSession, setSelectedSession] = useState(null);
-  const [userProfile, setUserProfile] = useState(null);
 
   useEffect(() => {
     checkAuth();
@@ -37,6 +40,8 @@ function App() {
 
   const checkAuth = () => {
     const userId = StorageService.getCurrentUserId();
+    const pendingUserId = StorageService.getPendingVerificationUserId();
+
     if (userId) {
       const users = StorageService.getUsers();
       if (users.some(u => u.id === userId)) {
@@ -47,25 +52,58 @@ function App() {
         StorageService.logout();
         setIsAuthenticated(false);
       }
+    } else if (pendingUserId) {
+      setIsPendingVerification(true);
     } else {
       setIsAuthenticated(false);
+      setIsPendingVerification(false);
     }
   };
 
   const loadUserData = () => {
-    const loadedSessions = StorageService.getSessions();
-    setSessions(loadedSessions);
+    const userId = StorageService.getCurrentUserId();
+    if (userId) {
+      // Load sessions
+      const userSessions = StorageService.getSessions();
+      setSessions(userSessions);
 
-    // Load user profile
-    const profile = ProfileService.getProfile();
-    setUserProfile(profile);
+      // Load profile
+      // Assuming profile is stored in localStorage or derived from user
+      // For now, we can try to get it from StorageService if it exists, or just use default
+      // StorageService.getProfile(userId) ??
 
-    // Initial achievement check
-    const streaks = AnalyticsService.calculateStreaks(loadedSessions);
-    setAchievements(AchievementService.evaluate(loadedSessions, streaks));
+      // Let's check if there is a profile service or if we just use local state
+      // Based on handleLogout, we have setUserProfile
+
+      // Check if there is a profile key in storage
+      const profileKey = `mindtrack.${userId}.profile`;
+      const savedProfile = localStorage.getItem(profileKey);
+      if (savedProfile) {
+        setUserProfile(JSON.parse(savedProfile));
+      } else {
+        setUserProfile(null);
+      }
+
+      // Load achievements
+      const streakData = AnalyticsService.calculateStreaks(userSessions);
+      const userAchievements = AchievementService.evaluate(userSessions, streakData);
+      setAchievements(userAchievements);
+    }
   };
 
   const handleLogin = () => {
+    setIsAuthenticated(true);
+    setIsPendingVerification(false);
+    loadUserData();
+    setView('home');
+  };
+
+  const handleSignupSuccess = () => {
+    setIsPendingVerification(true);
+  };
+
+  const handleVerifySuccess = () => {
+    setIsPendingVerification(false);
     setIsAuthenticated(true);
     loadUserData();
     setView('home');
@@ -73,7 +111,9 @@ function App() {
 
   const handleLogout = () => {
     StorageService.logout();
+    StorageService.clearPendingVerificationUserId();
     setIsAuthenticated(false);
+    setIsPendingVerification(false);
     setSessions([]);
     setUserProfile(null);
     setAchievements([]);
@@ -89,29 +129,31 @@ function App() {
     setView('running');
   };
 
-  const handleEndSession = (finalSession) => {
-    StorageService.saveSession(finalSession);
+  const handleEndSession = (session) => {
+    setCompletedSession(session);
+    StorageService.saveSession(session);
+
+    // Update sessions list
     const updatedSessions = StorageService.getSessions();
     setSessions(updatedSessions);
 
     // Check achievements
-    const streaks = AnalyticsService.calculateStreaks(updatedSessions);
-    const updatedAchievements = AchievementService.evaluate(updatedSessions, streaks);
-    setAchievements(updatedAchievements);
+    const streakData = AnalyticsService.calculateStreaks(updatedSessions);
+    const newAchievements = AchievementService.evaluate(updatedSessions, streakData);
+    setAchievements(newAchievements);
 
-    setCompletedSession(finalSession);
     setView('summary');
-  };
-
-  const handleDiscardSession = () => {
-    setView('home');
     setCurrentSessionConfig(null);
   };
 
-  const handleCloseSummary = () => {
+  const handleDiscardSession = () => {
+    setCurrentSessionConfig(null);
     setView('home');
+  };
+
+  const handleCloseSummary = () => {
     setCompletedSession(null);
-    setSelectedSession(null);
+    setView('home');
   };
 
   const handleSelectSession = (session) => {
@@ -119,87 +161,36 @@ function App() {
     setView('detail');
   };
 
+  const handleProfileUpdate = (profile) => {
+    setUserProfile(profile);
+    // Save profile to storage (if we had a method, for now just state)
+    const userId = StorageService.getCurrentUserId();
+    if (userId) {
+      localStorage.setItem(`mindtrack.${userId}.profile`, JSON.stringify(profile));
+    }
+  };
+
   const handleExport = () => {
     const data = {
-      sessions: StorageService.getSessions(),
-      templates: StorageService.getTemplates(),
-      achievements: JSON.parse(localStorage.getItem('focus_achievements') || '{}'),
-      exportDate: new Date().toISOString()
+      sessions,
+      userProfile,
+      achievements
     };
-
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `focus-analyzer-backup-${new Date().toISOString().split('T')[0]}.json`;
-    document.body.appendChild(a);
+    a.download = 'mindtrack-data.json';
     a.click();
-    document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
 
-  // Navigation Component
-  const Nav = () => (
-    <nav className="flex items-center justify-center gap-1 p-1 bg-surface border border-border rounded-full mb-8 mx-auto w-fit backdrop-blur-sm">
-      <button
-        onClick={() => setView('home')}
-        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${view === 'home' || view === 'setup' ? 'bg-background text-text-primary shadow-sm' : 'text-text-secondary hover:text-text-primary'
-          }`}
-      >
-        <div className="flex items-center gap-2">
-          <Play className="w-4 h-4" />
-          <span className="hidden sm:inline">Timer</span>
-        </div>
-      </button>
-      <button
-        onClick={() => setView('dashboard')}
-        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${view === 'dashboard' ? 'bg-background text-text-primary shadow-sm' : 'text-text-secondary hover:text-text-primary'
-          }`}
-      >
-        <div className="flex items-center gap-2">
-          <LayoutDashboard className="w-4 h-4" />
-          <span className="hidden sm:inline">Dashboard</span>
-        </div>
-      </button>
-      <button
-        onClick={() => setView('calendar')}
-        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${view === 'calendar' ? 'bg-background text-text-primary shadow-sm' : 'text-text-secondary hover:text-text-primary'
-          }`}
-      >
-        <div className="flex items-center gap-2">
-          <CalendarIcon className="w-4 h-4" />
-          <span className="hidden sm:inline">Calendar</span>
-        </div>
-      </button>
-      <button
-        onClick={() => setView('history')}
-        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${view === 'history' || view === 'detail' ? 'bg-background text-text-primary shadow-sm' : 'text-text-secondary hover:text-text-primary'
-          }`}
-      >
-        <div className="flex items-center gap-2">
-          <HistoryIcon className="w-4 h-4" />
-          <span className="hidden sm:inline">History</span>
-        </div>
-      </button>
-      <button
-        onClick={() => setView('achievements')}
-        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${view === 'achievements' ? 'bg-background text-text-primary shadow-sm' : 'text-text-secondary hover:text-text-primary'
-          }`}
-      >
-        <div className="flex items-center gap-2">
-          <Trophy className="w-4 h-4" />
-          <span className="hidden sm:inline">Trophies</span>
-        </div>
-      </button>
-    </nav>
-  );
-
-  const handleProfileUpdate = (updatedProfile) => {
-    setUserProfile(updatedProfile);
-  };
+  if (isPendingVerification) {
+    return <VerifyEmailScreen onVerifySuccess={handleVerifySuccess} />;
+  }
 
   if (!isAuthenticated) {
-    return <AuthScreen onLogin={handleLogin} />;
+    return <AuthScreen onLogin={handleLogin} onSignupSuccess={handleSignupSuccess} />;
   }
 
   return (
@@ -237,7 +228,7 @@ function App() {
           </div>
         </header>
 
-        {view !== 'running' && view !== 'end' && view !== 'summary' && <Nav />}
+        {view !== 'running' && view !== 'end' && view !== 'summary' && null /* <Nav /> */}
 
         <main>
           {view === 'home' && (

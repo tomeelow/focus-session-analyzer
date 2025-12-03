@@ -4,7 +4,7 @@ import { Button } from './Button';
 import { MindtrackLogo } from './MindtrackLogo';
 import { User, Lock, Mail, ArrowRight, AlertCircle } from 'lucide-react';
 
-export function AuthScreen({ onLogin }) {
+export function AuthScreen({ onLogin, onSignupSuccess }) {
     const [mode, setMode] = useState('login'); // 'login' or 'signup'
     const [formData, setFormData] = useState({
         email: '',
@@ -56,7 +56,10 @@ export function AuthScreen({ onLogin }) {
                     id: crypto.randomUUID(),
                     email: formData.email,
                     passwordHash,
-                    createdAt: new Date().toISOString()
+                    createdAt: new Date().toISOString(),
+                    isVerified: false,
+                    verificationCode: StorageService.generateVerificationCode(),
+                    verificationCodeCreatedAt: new Date().toISOString()
                 };
 
                 StorageService.saveUser(newUser);
@@ -66,9 +69,9 @@ export function AuthScreen({ onLogin }) {
                     StorageService.migrateDataIfNeeded(newUser.id);
                 }
 
-                // Login
-                StorageService.setCurrentUserId(newUser.id);
-                onLogin();
+                // Redirect to verification
+                StorageService.setPendingVerificationUserId(newUser.id);
+                onSignupSuccess();
 
             } else {
                 // Login
@@ -86,6 +89,12 @@ export function AuthScreen({ onLogin }) {
                 const passwordHash = await hashPassword(formData.password);
                 if (user.passwordHash !== passwordHash) {
                     throw new Error('Invalid email or password');
+                }
+
+                if (!user.isVerified) {
+                    StorageService.setPendingVerificationUserId(user.id);
+                    onSignupSuccess(); // Redirect to verify screen
+                    return; // Stop execution
                 }
 
                 // Success

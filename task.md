@@ -1,18 +1,21 @@
-# Branding Update
+# Email Verification Flow
 
-- [x] Planning and Setup <!-- id: 0 -->
-    - [x] Create feature branch `feature/branding-update` <!-- id: 1 -->
+- [ ] Planning and Setup <!-- id: 0 -->
+    - [x] Create feature branch `feature/auth-email-verification` <!-- id: 1 -->
     - [x] Create implementation plan <!-- id: 2 -->
-- [x] Design System Updates <!-- id: 3 -->
-    - [x] Update CSS variables in `index.css` for new accent color <!-- id: 4 -->
-    - [x] Create `BrainIcon` component <!-- id: 5 -->
-    - [x] Create `MindtrackLogo` component <!-- id: 6 -->
-- [x] UI Integration <!-- id: 7 -->
-    - [x] Update Header in `App.jsx` to use `MindtrackLogo` <!-- id: 8 -->
-    - [x] Update `AuthScreen.jsx` to use `MindtrackLogo` <!-- id: 9 -->
-    - [x] Verify accent color usage across the app <!-- id: 10 -->
-    - [x] Update Favicon (optional) <!-- id: 11 -->
-- [x] Verification <!-- id: 12 -->
-    - [x] Visual check of Header and Auth Screen <!-- id: 13 -->
-    - [x] Visual check of accent colors in Light/Dark mode <!-- id: 14 -->
-    - [x] Fix blank page issue (missing import) <!-- id: 15 -->
+- [ ] Storage Service Updates <!-- id: 3 -->
+    - [x] Update `StorageService` to handle `isVerified` and `verificationCode` <!-- id: 4 -->
+    - [x] Implement `pendingVerificationUserId` management <!-- id: 5 -->
+    - [x] Add `generateVerificationCode` helper <!-- id: 6 -->
+- [ ] UI Implementation <!-- id: 7 -->
+    - [x] Create `VerifyEmailScreen` component <!-- id: 8 -->
+    - [x] Update `AuthScreen` to redirect to verification on signup <!-- id: 9 -->
+    - [x] Update `App.jsx` to handle verification route and state <!-- id: 10 -->
+- [x] Verification Logic <!-- id: 11 -->
+    - [x] Implement code verification logic <!-- id: 12 -->
+    - [x] Implement resend code logic <!-- id: 13 -->
+    - [x] Block login for unverified users <!-- id: 14 -->
+- [x] Final Verification <!-- id: 15 -->
+    - [x] Verify the flow (manual testing simulation) <!-- id: 9 -->
+    - [ ] Test login blocking for unverified users <!-- id: 17 -->
+    - [ ] Test resend code <!-- id: 18 -->
