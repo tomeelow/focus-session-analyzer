@@ -1,6 +1,7 @@
 const STORAGE_KEY_PREFIX = 'mindtrack.';
 const USERS_KEY = 'mindtrack.users';
 const CURRENT_USER_KEY = 'mindtrack.currentUserId';
+const PENDING_VERIFICATION_USER_ID_KEY = 'mindtrack.pendingVerificationUserId';
 
 // Helper to get the key for the current user
 const getUserKey = (suffix) => {
@@ -14,7 +15,12 @@ export const StorageService = {
 
   getUsers: () => {
     const data = localStorage.getItem(USERS_KEY);
-    return data ? JSON.parse(data) : [];
+    const users = data ? JSON.parse(data) : [];
+    // Default isVerified to true for existing users (migration)
+    return users.map(user => ({
+      ...user,
+      isVerified: user.isVerified !== undefined ? user.isVerified : true
+    }));
   },
 
   saveUser: (user) => {
@@ -22,9 +28,22 @@ export const StorageService = {
     // Check if user already exists
     const existingIndex = users.findIndex(u => u.id === user.id);
     if (existingIndex >= 0) {
-      users[existingIndex] = user;
+      // Preserve verification fields if updating
+      const existingUser = users[existingIndex];
+      users[existingIndex] = {
+        ...existingUser, // Start with existing user data
+        ...user,         // Overlay with new user data
+        // Explicitly ensure verification fields are preserved if not provided in 'user'
+        isVerified: user.isVerified !== undefined ? user.isVerified : existingUser.isVerified,
+        verificationCode: user.verificationCode !== undefined ? user.verificationCode : existingUser.verificationCode,
+      };
     } else {
-      users.push(user);
+      // New user, add with default verification status and generate code
+      users.push({
+        ...user,
+        isVerified: user.isVerified !== undefined ? user.isVerified : false,
+        verificationCode: user.verificationCode || StorageService.generateVerificationCode()
+      });
     }
     localStorage.setItem(USERS_KEY, JSON.stringify(users));
   },
@@ -34,11 +53,37 @@ export const StorageService = {
   },
 
   setCurrentUserId: (userId) => {
-    localStorage.setItem(CURRENT_USER_KEY, userId);
+    if (userId) {
+      localStorage.setItem(CURRENT_USER_KEY, userId);
+    } else {
+      localStorage.removeItem(CURRENT_USER_KEY);
+    }
+  },
+
+  getPendingVerificationUserId: () => {
+    return localStorage.getItem(PENDING_VERIFICATION_USER_ID_KEY);
+  },
+
+  setPendingVerificationUserId: (userId) => {
+    if (userId) {
+      localStorage.setItem(PENDING_VERIFICATION_USER_ID_KEY, userId);
+    } else {
+      localStorage.removeItem(PENDING_VERIFICATION_USER_ID_KEY);
+    }
+  },
+
+  clearPendingVerificationUserId: () => {
+    localStorage.removeItem(PENDING_VERIFICATION_USER_ID_KEY);
+  },
+
+  generateVerificationCode: () => {
+    return Math.floor(100000 + Math.random() * 900000).toString();
   },
 
   logout: () => {
     localStorage.removeItem(CURRENT_USER_KEY);
+    // We don't clear pending verification on logout,
+    // as they might want to verify immediately after
   },
 
   // --- Migration ---
