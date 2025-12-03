@@ -8,6 +8,7 @@
     - [x] Implement `pendingVerificationUserId` management <!-- id: 5 -->
     - [x] Add `generateVerificationCode` helper <!-- id: 6 -->
 - [ ] UI Implementation <!-- id: 7 -->
+- [x] UI Implementation <!-- id: 7 -->
     - [x] Create `VerifyEmailScreen` component <!-- id: 8 -->
     - [x] Update `AuthScreen` to redirect to verification on signup <!-- id: 9 -->
     - [x] Update `App.jsx` to handle verification route and state <!-- id: 10 -->
@@ -17,5 +18,5 @@
     - [x] Block login for unverified users <!-- id: 14 -->
 - [x] Final Verification <!-- id: 15 -->
     - [x] Verify the flow (manual testing simulation) <!-- id: 9 -->
-    - [ ] Test login blocking for unverified users <!-- id: 17 -->
-    - [ ] Test resend code <!-- id: 18 -->
+    - [x] Test login blocking for unverified users <!-- id: 17 -->
+    - [x] Test resend code <!-- id: 18 -->
